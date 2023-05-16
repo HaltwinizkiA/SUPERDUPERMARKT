@@ -1,4 +1,4 @@
-package org.example.worker;
+package com.haltwinizki.worker;
 
 
 import java.io.BufferedWriter;

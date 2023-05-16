@@ -1,9 +1,9 @@
-package org.example;
+package com.haltwinizki;
 
-import org.example.products.Käse;
-import org.example.products.Product;
-import org.example.products.Wein;
-import org.example.worker.Logger;
+import com.haltwinizki.products.Product;
+import com.haltwinizki.products.Käse;
+import com.haltwinizki.products.Wein;
+import com.haltwinizki.worker.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

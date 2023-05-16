@@ -1,6 +1,6 @@
-package org.example.repository;
+package com.haltwinizki.repository;
 
-import org.example.products.Product;
+import com.haltwinizki.products.Product;
 
 import java.util.List;
 

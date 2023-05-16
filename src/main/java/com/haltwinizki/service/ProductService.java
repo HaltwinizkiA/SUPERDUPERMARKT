@@ -1,6 +1,6 @@
-package org.example.service;
+package com.haltwinizki.service;
 
-import org.example.products.Product;
+import com.haltwinizki.products.Product;
 
 import java.util.List;
 

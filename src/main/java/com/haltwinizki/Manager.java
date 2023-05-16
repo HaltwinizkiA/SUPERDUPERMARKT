@@ -1,10 +1,10 @@
-package org.example;
+package com.haltwinizki;
 
 
-import org.example.products.Product;
-import org.example.products.Wein;
-import org.example.service.ProductService;
-import org.example.service.impl.ProductServiceImpl;
+import com.haltwinizki.products.Product;
+import com.haltwinizki.products.Wein;
+import com.haltwinizki.service.ProductService;
+import com.haltwinizki.service.impl.ProductServiceImpl;
 
 import java.text.SimpleDateFormat;
 import java.util.Scanner;

@@ -1,9 +1,9 @@
-package org.example.service.impl;
+package com.haltwinizki.service.impl;
 
-import org.example.products.Product;
-import org.example.repository.ProductRepository;
-import org.example.repository.impl.LocalProductRepository;
-import org.example.service.ProductService;
+import com.haltwinizki.products.Product;
+import com.haltwinizki.repository.ProductRepository;
+import com.haltwinizki.repository.impl.LocalProductRepository;
+import com.haltwinizki.service.ProductService;
 
 import java.util.Date;
 import java.util.List;

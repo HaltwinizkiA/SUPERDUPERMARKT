@@ -1,7 +1,7 @@
-package org.example.local;
+package com.haltwinizki.local;
 
-import org.example.products.Product;
-import org.example.worker.FileWorker;
+import com.haltwinizki.products.Product;
+import com.haltwinizki.worker.FileWorker;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package org.example.repository.impl;
+package com.haltwinizki.repository.impl;
 
-import org.example.local.LocaleProductsBase;
-import org.example.products.Product;
-import org.example.repository.ProductRepository;
+import com.haltwinizki.local.LocaleProductsBase;
+import com.haltwinizki.products.Product;
+import com.haltwinizki.repository.ProductRepository;
 
 import java.util.List;
 

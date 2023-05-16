@@ -1,9 +1,9 @@
-package org.example;
+package com.haltwinizki;
 
 
-import org.example.service.ProductService;
-import org.example.worker.FileWorker;
-import org.example.worker.Logger;
+import com.haltwinizki.service.ProductService;
+import com.haltwinizki.worker.FileWorker;
+import com.haltwinizki.worker.Logger;
 
 
 import java.util.Date;

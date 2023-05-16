@@ -1,6 +1,4 @@
-package org.example.service.impl;
-
-import static org.junit.jupiter.api.Assertions.*;
+package com.haltwinizki.service.impl;
 
 class ProductServiceImplTest {
 

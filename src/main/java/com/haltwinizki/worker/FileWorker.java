@@ -1,11 +1,11 @@
-package org.example.worker;
+package com.haltwinizki.worker;
 
 
+import com.haltwinizki.products.Product;
 import liquibase.util.csv.CSVReader;
 import liquibase.util.csv.CSVWriter;
-import org.example.products.Käse;
-import org.example.products.Product;
-import org.example.products.Wein;
+import com.haltwinizki.products.Käse;
+import com.haltwinizki.products.Wein;
 
 import java.io.*;
 import java.text.ParseException;

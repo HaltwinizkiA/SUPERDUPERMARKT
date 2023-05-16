@@ -1,4 +1,4 @@
-package org.example.products;
+package com.haltwinizki.products;
 
 import java.util.Date;
 

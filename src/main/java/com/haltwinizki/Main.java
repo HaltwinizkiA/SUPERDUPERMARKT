@@ -1,7 +1,4 @@
-package org.example;
-
-
-import java.text.ParseException;
+package com.haltwinizki;
 
 
 public class Main {
