@@ -48,6 +48,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void qualityChange() {
-        getAllProducts().stream().forEach(product->qualityChange());
+        for (Product product:getAllProducts()){
+            product.qualityChange();
+        }
     }
 }

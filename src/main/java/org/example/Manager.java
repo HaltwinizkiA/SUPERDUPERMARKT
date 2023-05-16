@@ -5,6 +5,7 @@ import org.example.products.Product;
 import org.example.products.Wein;
 import org.example.service.ProductService;
 import org.example.service.impl.ProductServiceImpl;
+import org.example.worker.FileWorker;
 
 import java.text.SimpleDateFormat;
 import java.util.Optional;
@@ -23,6 +24,8 @@ public class Manager {
 
     public void start() {
 
+        DailyProductQualityChangeScheduler dailyProductQualityChangeScheduler=new DailyProductQualityChangeScheduler();
+        dailyProductQualityChangeScheduler.schedulerStart(productService);
         boolean loop = true;
         while (loop) {
             System.out.println("1. Produkt hinzufügen");
@@ -100,12 +103,12 @@ public class Manager {
             String ablaufDatum = "";
             if (productService.checkExpirationDate(product)) {
                 ablaufDatum = "noch nicht abgelaufen";
+            }else {
+                ablaufDatum = "- abgelaufen - sollten entfernt werden ";
             }if (product.getClass()== Wein.class){
                 ablaufDatum="";
             }
-            else {
-                ablaufDatum = "- abgelaufen - sollten entfernt werden ";
-            }
+
             String expirationDate;//todo think abou it!
             if (product.getExpirationDate()==null){
                 expirationDate="";

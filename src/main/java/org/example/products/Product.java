@@ -10,12 +10,13 @@ public abstract class Product {
     private String name;
     private int quality;
     private Date expirationDate;
-    public Product(long id, String name, double price, int quality, Date expirationDate) {
+    public Product(long id, String name, double price, int quality, Date expirationDate,int dayCounter) {
         this.id = id;
         this.price = price;
         this.name = name;
         this.quality = quality;
         this.expirationDate = expirationDate;
+        this.dayCounter=dayCounter;
     }
     public Product(String name, double price, int quality, Date expirationDate) {
         this.price = price;

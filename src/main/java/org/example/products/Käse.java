@@ -5,8 +5,8 @@ import java.util.Date;
 public class Käse extends Product {
 
 
-    public Käse(long id, String name, double price, int quality, Date expirationDate) {
-        super(id, name, price, quality, expirationDate);
+    public Käse(long id, String name, double price, int quality, Date expirationDate,int dayCounter) {
+        super(id, name, price, quality, expirationDate,dayCounter);
     }
     public Käse( String name, double price, int quality, Date expirationDate) {
         super( name, price, quality, expirationDate);
@@ -14,10 +14,7 @@ public class Käse extends Product {
 
     @Override
     public void qualityChange() {
-
-        setQuality(getQuality()-1);
-
-
+        this.setQuality(getQuality()-1);
     }
 
     @Override

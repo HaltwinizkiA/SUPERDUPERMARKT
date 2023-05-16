@@ -3,8 +3,8 @@ package org.example.products;
 import java.util.Date;
 
 public class Wein extends Product {
-    public Wein(long id, String name, double price, int quality, Date expirationDate) {
-        super(id, name, price, quality, expirationDate);
+    public Wein(long id, String name, double price, int quality, Date expirationDate,int dayCounter) {
+        super(id, name, price, quality, expirationDate,dayCounter);
     }
 
     public Wein(String name, double price, int quality, Date expirationDate) {
@@ -15,7 +15,7 @@ public class Wein extends Product {
     public void qualityChange() {
 
         if (getQuality() < 50 && this.getDayCounter() == 10) {
-            setQuality(getQuality() + 1);
+           this.setQuality(getQuality() + 1);
             this.setDayCounter(0);
         } else this.setDayCounter(this.getDayCounter() + 1);
 

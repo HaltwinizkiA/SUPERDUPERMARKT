@@ -1,5 +1,7 @@
 package org.example.worker;
 
+import liquibase.repackaged.com.opencsv.CSVReader;
+import liquibase.repackaged.com.opencsv.exceptions.CsvException;
 import org.example.products.Käse;
 import org.example.products.Product;
 import org.example.products.Wein;
@@ -38,17 +40,17 @@ public class FileWorker {
                 String name = data[2];
                 double price = Double.parseDouble(data[3]);
                 int quality = Integer.parseInt(data[4]);
-
+                int dayCounter=Integer.parseInt(data[6]);
 
                 Product product;
 
                 if (art.equals("Käse")) {
                     Date expirationDate = dateFormat.parse(data[5]);
-                    product = new Käse(id, name, price, quality, expirationDate);
+                    product = new Käse(id, name, price, quality, expirationDate,dayCounter);
                     productsList.add(product);
                 }
                 if (art.equals("Wein")) {
-                    product = new Wein(id, name, price, quality, null);
+                    product = new Wein(id, name, price, quality, null,dayCounter);
                     productsList.add(product);
                 }
 
@@ -69,7 +71,8 @@ public class FileWorker {
             bw.newLine();
 
             for (Product product : productsList) {
-                String line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + "," + product.getPrice() + "," + product.getQuality() + "," + dateFormat.format(product.getExpirationDate());
+                String line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + "," + product.getPrice() + "," + product.getQuality() +
+                        "," + dateFormat.format(product.getExpirationDate())+","+product.getDayCounter();
 
                 bw.write(line);
                 bw.newLine();
@@ -91,16 +94,16 @@ public class FileWorker {
 
     }
     public Date getLastLog(String fileName){
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-
-            }
-            return  dateFormat.parse(line);
+        try (CSVReader br = new CSVReader(new FileReader(fileName))) {
+            List<String[]> rows=br.readAll();
+            String lastLog=rows.get(rows.size()-1)[0];
+            return  dateFormat.parse(lastLog);
 
         } catch (ParseException | IOException ex) {
             System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten "+ ex);
             return null;//todo
+        } catch (CsvException e) {
+            throw new RuntimeException(e);
         }
 
     }

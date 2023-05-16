@@ -1,4 +1,4 @@
-ART,ID,NAME,PRICE,QUALITY,EXPIRATION DATE(dd.MM.yyyy)
-Wein,1,DeutscheRotWein,5,10,
-Käse,2,HolandisheGrüne,4,30,20.07.2023
-Käse,3,Holandishe,12,50,20.05.2023
+ART,ID,NAME,PRICE,QUALITY,EXPIRATION DATE(dd.MM.yyyy),dayCounter
+Wein,1,DeutscheRotWein,5,10,null,10
+Käse,2,HolandisheGrüne,4,30,20.07.2023,0
+Käse,3,Holandishe,12,50,20.05.2023,0
