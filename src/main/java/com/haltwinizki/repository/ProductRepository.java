@@ -13,7 +13,7 @@ public interface ProductRepository {
 
     Product create(Product product);
 
-    Product get(long id);
+    Product getById(long id);
 
     List<Product> getDiscardedProducts();
 }

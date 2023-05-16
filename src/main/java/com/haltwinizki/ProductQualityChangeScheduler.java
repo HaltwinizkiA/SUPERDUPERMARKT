@@ -9,8 +9,9 @@ import com.haltwinizki.worker.Logger;
 import java.util.Date;
 
 
-public class ProductQualityChangeScheduler{
+public class ProductQualityChangeScheduler {
     private static final String FILENAME = "src/main/resources/logQualityChange.csv";
+    private static final int TIMEOUT=86400000;// ein Tag in Milisekunden
     private final FileWorker fileWorker = new FileWorker();
     private Thread thread;
 
@@ -34,7 +35,7 @@ public class ProductQualityChangeScheduler{
                         fileWorker.qualityChangeLog(FILENAME);
                     }
                     try {
-                        Thread.sleep(86400000); // eine Tag in Milisekunden
+                        Thread.sleep(TIMEOUT);
                     } catch (InterruptedException e) {
                         Logger.log(e);
                     }

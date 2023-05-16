@@ -11,15 +11,16 @@ public class Logger {
 
     public static void log(Exception ex) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME))) {
-            bw.write(new Date()+" - "+ex);
+            bw.write(new Date() + " - " + ex);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public static void log(String message) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME))) {
-            bw.write(new Date()+" - "+message);
+            bw.write(new Date() + " - " + message);
 
         } catch (IOException e) {
             e.printStackTrace();

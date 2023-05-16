@@ -15,6 +15,13 @@ import java.util.Date;
 import java.util.List;
 
 public class FileWorker {
+    private static final int ART_NUM = 0;
+    private static final int ID_NUM = 1;
+    private static final int NAME_NUM = 2;
+    private static final int PRICE_NUM = 3;
+    private static final int QUALITY_NUM = 4;
+    private static final int DATE_NUM = 5;
+    private static final int DAY_COUNTER_NUM = 6;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
     public SimpleDateFormat getDateFormat() {
@@ -36,17 +43,17 @@ public class FileWorker {
 
                 String[] data = line.split(",");
 
-                String art = data[0];
-                int id = Integer.parseInt(data[1]);
-                String name = data[2];
-                double price = Double.parseDouble(data[3]);
-                int quality = Integer.parseInt(data[4]);
-                int dayCounter = Integer.parseInt(data[6]);
+                String art = data[ART_NUM];
+                int id = Integer.parseInt(data[ID_NUM]);
+                String name = data[NAME_NUM];
+                double price = Double.parseDouble(data[PRICE_NUM]);
+                int quality = Integer.parseInt(data[QUALITY_NUM]);
+                int dayCounter = Integer.parseInt(data[DAY_COUNTER_NUM]);
 
                 Product product;
 
                 if (art.equals("Käse")) {
-                    Date expirationDate = dateFormat.parse(data[5]);
+                    Date expirationDate = dateFormat.parse(data[DATE_NUM]);
                     product = new Käse(id, name, price, quality, expirationDate, dayCounter);
                     productsList.add(product);
                 }
@@ -72,13 +79,22 @@ public class FileWorker {
             bw.newLine();
 
             for (Product product : productsList) {
-                String line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + "," + product.getPrice() + "," + product.getQuality() + "," + dateFormat.format(product.getExpirationDate()) + "," + product.getDayCounter();
+                String line="";
+
+                if (product.getClass().getSimpleName().equals("Käse")) {
+                    line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + ","
+                            + product.getPrice() + "," + product.getQuality() + "," + dateFormat.format(product.getExpirationDate()) + "," + product.getDayCounter();
+                }if (product.getClass().getSimpleName().equals("Wein")) {
+                    line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + ","
+                            + product.getPrice() + "," + product.getQuality() + "," + null + "," + product.getDayCounter();
+                }
+
 
                 bw.write(line);
                 bw.newLine();
             }
         } catch (IOException e) {
-            Logger.log(e);;
+            Logger.log(e);
         }
     }
 
@@ -99,7 +115,6 @@ public class FileWorker {
         try (CSVReader csvR = new CSVReader(new FileReader(fileName))) {
             return csvR.readAll();
         } catch (IOException ex) {
-            System.out.println();
             Logger.log("mit Quality Logging sind Probleme aufgetreten " + ex);
             return null;//todo
         }

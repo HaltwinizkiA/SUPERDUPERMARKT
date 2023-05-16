@@ -18,14 +18,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product get(long id) {
-        return productRepository.get(id);
+        return productRepository.getById(id);
     }
 
     @Override
     public Product remove(long id) {
-        Product product = productRepository.get(id);
+        Product product = productRepository.removeProduct(id);
         productRepository.getDiscardedProducts().add(product);
-        return productRepository.removeProduct(id);
+        return product;
     }
 
     @Override

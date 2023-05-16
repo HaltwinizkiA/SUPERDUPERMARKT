@@ -15,30 +15,25 @@ public class LocalProductRepository implements ProductRepository {
 
     @Override
     public Product removeProduct(long id) {
-        Product removedProduct = get(id);
-        for (Product product : LocaleProductsBase.getInstance().getProductsList()) {
-            if (product.getId() == id) {
-                LocaleProductsBase.getInstance().getProductsList().remove(product);
-            }
-        }
+        Product removedProduct = getById(id);
+        LocaleProductsBase.getInstance().getProductsList().remove(removedProduct);
         return removedProduct;
     }
 
     @Override
-    public Product update(Product productToUpdate) {
-        for (Product product : LocaleProductsBase.getInstance().getProductsList()) {
-            if (product.getId() == productToUpdate.getId()) {
-                LocaleProductsBase.getInstance().getProductsList().remove(product);
-                LocaleProductsBase.getInstance().getProductsList().add(productToUpdate);
-            }
-        }
-        return productToUpdate;
+    public Product update(Product product) {
+        Product toRemove = getById(product.getId()); //todo
+        LocaleProductsBase.getInstance().getProductsList().remove(toRemove);
+        LocaleProductsBase.getInstance().getProductsList().add(product);
+        LocaleProductsBase.getInstance().save();
+        return product;
     }
 
     @Override
     public Product create(Product product) {
         product.setId(getFreeId());
         LocaleProductsBase.getInstance().getProductsList().add(product);
+        LocaleProductsBase.getInstance().save();
         return product;
     }
 
@@ -54,8 +49,8 @@ public class LocalProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product get(long id) {
-        Product productGet = null;//todo
+    public Product getById(long id) {
+        Product productGet = null;
         for (Product product : LocaleProductsBase.getInstance().getProductsList()) {
             if (product.getId() == id) {
                 productGet = product;

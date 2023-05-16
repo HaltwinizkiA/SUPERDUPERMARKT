@@ -2,7 +2,6 @@ package com.haltwinizki;
 
 
 import com.haltwinizki.products.Product;
-import com.haltwinizki.products.Wein;
 import com.haltwinizki.service.ProductService;
 import com.haltwinizki.service.impl.ProductServiceImpl;
 
@@ -11,10 +10,10 @@ import java.util.Scanner;
 
 public class Manager {
 
-    private final ProductService productService = new ProductServiceImpl();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private final ProductService productService = new ProductServiceImpl();
     private final Scanner scanner = new Scanner(System.in);
-    private final MarktConsoleRenderer marktConsoleRenderer = new MarktConsoleRenderer(scanner);
+    private final MarketConsoleRenderer marketConsoleRenderer = new MarketConsoleRenderer(scanner);
 
     public void start() {
 
@@ -41,7 +40,7 @@ public class Manager {
                     removeProduct();
                     break;
                 case 4:
-                    täglicheÜBersicht();
+                    dailyOverview();
                     break;
                 case 5:
                     discardedProducts();
@@ -59,12 +58,7 @@ public class Manager {
     }
 
     private void discardedProducts() {
-        System.out.println("ART, ID, NAME, NORMALE PRICE, PRICE, QUALITY");
-        for (Product product : productService.getDiscardedProducts()) {
-
-            System.out.println(product.getClass().getSimpleName() + ", " + product.getId() + ", " + product.getName() + ", " + product.getPrice() + ", " + product.getDayliPrice() + ", " + product.getQuality());
-
-        }
+        marketConsoleRenderer.printProducts(productService.getDiscardedProducts(), productService);
     }
 
     private void updateProduct() {
@@ -75,7 +69,7 @@ public class Manager {
             System.out.println("Produkt mit dieser ID existiert nicht");
             return;
         }
-        productService.update(marktConsoleRenderer.updateProductMenu(product));
+        productService.update(marketConsoleRenderer.updateProductMenu(product));
     }
 
     private void removeProduct() {
@@ -88,29 +82,11 @@ public class Manager {
     }
 
     private void addProduct() {
-        productService.create(marktConsoleRenderer.createProduct());
+        productService.create(marketConsoleRenderer.createProduct());
     }
 
-    private void täglicheÜBersicht() {
-        System.out.println("ART, ID, NAME, NORMALE PRICE, PRICE, QUALITY, Verfallsdatum, ZUSTAND");
-        for (Product product : productService.getAllProducts()) {
-            String ablaufDatum = "";
-            if (productService.checkExpiration(product)) {
-                ablaufDatum = "noch nicht abgelaufen";
-            } else {
-                ablaufDatum = "- abgelaufen - sollten entfernt werden ";
-            }
-            if (product.getClass() == Wein.class) {
-                ablaufDatum = "";
-            }
-
-            String expirationDate;//todo think about it!
-            if (product.getExpirationDate() == null) {
-                expirationDate = "";
-            } else expirationDate = dateFormat.format(product.getExpirationDate());
-
-            System.out.println(product.getClass().getSimpleName() + ", " + product.getId() + ", " + product.getName() + ", " + product.getPrice() + ", " + product.getDayliPrice() + ", " + product.getQuality() + ", " + expirationDate + " " + ablaufDatum);
-
-        }
+    private void dailyOverview() {
+        marketConsoleRenderer.printProducts(productService.getAllProducts(), productService);
     }
 }
+

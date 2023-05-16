@@ -19,12 +19,17 @@ public class Käse extends Product {
     }
 
     @Override
-    public double getDayliPrice() {
+    public double getDailyPrice() {
         return getPrice() + 0.10 * getQuality();
     }
 
     @Override
     public boolean isSpoiled() {
         return getQuality() < 30;
+    }
+
+    @Override
+    public boolean checkExpiration() {
+        return new Date().before(this.getExpirationDate()) && !this.isSpoiled();
     }
 }

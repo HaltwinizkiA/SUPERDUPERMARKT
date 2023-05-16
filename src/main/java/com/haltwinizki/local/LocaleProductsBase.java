@@ -6,9 +6,9 @@ import com.haltwinizki.worker.FileWorker;
 import java.util.List;
 
 public class LocaleProductsBase {
-    private static LocaleProductsBase instance;
     private static final String PRODUCT_FILE_NAME = "src/main/resources/products.csv";
     private static final String DISCARDED_PRODUCT_FILE_NAME = "src/main/resources/discardedProducts.csv";
+    private static LocaleProductsBase instance;
     private final FileWorker fileWorker = new FileWorker();
     private final List<Product> productsList;
     private final List<Product> discardedProducts;

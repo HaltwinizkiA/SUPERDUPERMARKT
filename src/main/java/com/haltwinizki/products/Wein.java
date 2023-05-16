@@ -17,17 +17,24 @@ public class Wein extends Product {
         if (getQuality() < 50 && this.getDayCounter() == 10) {
             this.setQuality(getQuality() + 1);
             this.setDayCounter(0);
-        } else this.setDayCounter(this.getDayCounter() + 1);
+        } else {
+            this.setDayCounter(this.getDayCounter() + 1);
+        }
 
     }
 
     @Override
-    public double getDayliPrice() {
+    public double getDailyPrice() {
         return getPrice();
     }
 
     @Override
     public boolean isSpoiled() {
         return false;
+    }
+
+    @Override
+    public boolean checkExpiration() {
+        return true;
     }
 }
