@@ -3,6 +3,7 @@ package org.example;
 import org.example.products.Käse;
 import org.example.products.Product;
 import org.example.products.Wein;
+import org.example.worker.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +12,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MarktConsoleRenderer {
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     private final Scanner scanner;
 
     public MarktConsoleRenderer(Scanner scanner) {
@@ -85,6 +86,7 @@ public class MarktConsoleRenderer {
 
             } catch (InputMismatchException e) {
                 scanner.nextLine();
+                Logger.log(e);
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
 
             }
@@ -104,7 +106,7 @@ public class MarktConsoleRenderer {
                 break;
             } catch (ParseException e) {
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
-
+                Logger.log(e);
             }
         }
         return expirationDate;
@@ -120,6 +122,7 @@ public class MarktConsoleRenderer {
 
             } catch (InputMismatchException e) {
                 scanner.nextLine();
+                Logger.log(e);
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
 
             }

@@ -3,6 +3,7 @@ package org.example;
 
 import org.example.service.ProductService;
 import org.example.worker.FileWorker;
+import org.example.worker.Logger;
 
 
 import java.util.Date;
@@ -26,17 +27,16 @@ public class ProductQualityChangeScheduler{
             @Override
             public void run() {
                 while (true) {
-
                     Date date = new Date();
                     Date lastLogDate = fileWorker.getLastLog(FILENAME);
                     if (!fileWorker.getDateFormat().format(date).equals(fileWorker.getDateFormat().format(lastLogDate))) {
                         task.run();
-                        fileWorker.log(FILENAME);
+                        fileWorker.qualityChangeLog(FILENAME);
                     }
                     try {
                         Thread.sleep(86400000); // eine Tag in Milisekunden
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Logger.log(e);
                     }
                 }
             }

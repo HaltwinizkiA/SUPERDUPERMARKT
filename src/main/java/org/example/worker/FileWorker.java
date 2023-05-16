@@ -59,7 +59,7 @@ public class FileWorker {
             }
         } catch (IOException | ParseException e) {
             System.out.println("Produktdatei nicht gefunden");
-            e.printStackTrace();
+            Logger.log(e);
         }
         return productsList;
     }
@@ -78,31 +78,29 @@ public class FileWorker {
                 bw.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.log(e);;
         }
     }
 
-    public boolean log(String fileName) {
-        List<String[]> rows = getLogs(fileName);
+    public boolean qualityChangeLog(String fileName) {
+        List<String[]> rows = getQualityChangeLogs(fileName);
         try (CSVWriter cw = new CSVWriter(new FileWriter(fileName))) {
-            // log
-
             rows.add(new String[]{dateFormat.format(new Date())});
             cw.writeAll(rows);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.log(e);
             return false;
         }
 
     }
 
-    public List<String[]> getLogs(String fileName) {
+    public List<String[]> getQualityChangeLogs(String fileName) {
         try (CSVReader csvR = new CSVReader(new FileReader(fileName))) {
-
             return csvR.readAll();
         } catch (IOException ex) {
-            System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten " + ex);
+            System.out.println();
+            Logger.log("mit Quality Logging sind Probleme aufgetreten " + ex);
             return null;//todo
         }
 
@@ -116,17 +114,9 @@ public class FileWorker {
             return dateFormat.parse(lastLog);
 
         } catch (ParseException | IOException ex) {
-            System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten " + ex);
+            Logger.log("mit Quality Logging sind Probleme aufgetreten " + ex);
             return null;//todo
         }
-//            List<String[]> rows = getLogs(fileName);
-//            String lastLog = rows.get(rows.size() - 1)[0];
-//        try {
-//            return dateFormat.parse(lastLog);
-//        } catch (ParseException e) {
-//            System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten " + e);
-//            return  null;//todo
-//        }
-
     }
+
 }

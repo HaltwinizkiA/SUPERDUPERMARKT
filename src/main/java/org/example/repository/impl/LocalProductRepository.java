@@ -15,17 +15,12 @@ public class LocalProductRepository implements ProductRepository {
 
     @Override
     public Product removeProduct(long id) {
-
         Product removedProduct = get(id);
-
-
         for (Product product : LocaleProductsBase.getInstance().getProductsList()) {
             if (product.getId() == id) {
                 LocaleProductsBase.getInstance().getProductsList().remove(product);
             }
         }
-        //  LocaleProductsBase.getInstance().getProductsList()=
-        //          LocaleProductsBase.getInstance().getProductsList().stream().filter(id->!(id==idToDelete));
         return removedProduct;
     }
 

@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Manager {
 
     private final ProductService productService = new ProductServiceImpl();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     private final Scanner scanner = new Scanner(System.in);
     private final MarktConsoleRenderer marktConsoleRenderer = new MarktConsoleRenderer(scanner);
 
@@ -104,7 +104,7 @@ public class Manager {
                 ablaufDatum = "";
             }
 
-            String expirationDate;//todo think abou it!
+            String expirationDate;//todo think about it!
             if (product.getExpirationDate() == null) {
                 expirationDate = "";
             } else expirationDate = dateFormat.format(product.getExpirationDate());
