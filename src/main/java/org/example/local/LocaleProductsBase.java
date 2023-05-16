@@ -18,11 +18,6 @@ public class LocaleProductsBase {
     private final String discardedProductFileName = "src/main/resources/discardedProducts.csv";
     private final FileWorker fileWorker = new FileWorker();
     private final List<Product> productsList;
-
-    public List<Product> getDiscardedProducts() {
-        return discardedProducts;
-    }
-
     private final List<Product> discardedProducts;
 
     public LocaleProductsBase() {
@@ -40,6 +35,16 @@ public class LocaleProductsBase {
 
         }
         return instance;
+    }
+
+    public List<Product> getDiscardedProducts() {
+        return discardedProducts;
+    }
+
+    public void save() {
+        fileWorker.writeProductsInCSV(productFileName, productsList);
+        fileWorker.writeProductsInCSV(discardedProductFileName, discardedProducts);
+
     }
 
     public List<Product> getProductsList() {

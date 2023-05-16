@@ -1,4 +1,11 @@
 ART,ID,NAME,PRICE,QUALITY,EXPIRATION DATE(dd.MM.yyyy),dayCounter
-Wein,1,DeutscheRotWein,5,10,null,10
-Käse,2,HolandisheGrüne,4,30,20.07.2023,0
-Käse,3,Holandishe,12,50,20.05.2023,0
+Wein,1,DeutscheRotWein,5.66,10,null,10
+Käse,2,HolandisheGrüne,4.77,50,20.07.2023,0
+Käse,3,Holandishe,12,70,20.05.2023,0
+Wein,4,Moldavishe Savinion,12.5,1,null,10
+Wein,5,BelgisheRot,5.99,5,null,2
+Wein,6,Chardonnay,6.99,-2,null,9
+Käse,7,Gouda,10.99,100,03.06.2023,0
+Käse,8,Brie,7.99,66,05.05.2023,0
+Wein,9,Cabernet Sauvignon,9.99,-3,02.06.2023,7
+Käse,10,Emmental,8.99,60,07.06.2023,0

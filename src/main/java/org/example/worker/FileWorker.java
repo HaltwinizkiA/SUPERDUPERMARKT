@@ -1,7 +1,8 @@
 package org.example.worker;
 
-import liquibase.repackaged.com.opencsv.CSVReader;
-import liquibase.repackaged.com.opencsv.exceptions.CsvException;
+
+import liquibase.util.csv.CSVReader;
+import liquibase.util.csv.CSVWriter;
 import org.example.products.Käse;
 import org.example.products.Product;
 import org.example.products.Wein;
@@ -21,7 +22,7 @@ public class FileWorker {
     }
 
     public List<Product> readProductsAusCSV(String fileName) {
-        List<Product> productsList=new ArrayList<>();
+        List<Product> productsList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             boolean headerSkipped = false;
@@ -40,17 +41,17 @@ public class FileWorker {
                 String name = data[2];
                 double price = Double.parseDouble(data[3]);
                 int quality = Integer.parseInt(data[4]);
-                int dayCounter=Integer.parseInt(data[6]);
+                int dayCounter = Integer.parseInt(data[6]);
 
                 Product product;
 
                 if (art.equals("Käse")) {
                     Date expirationDate = dateFormat.parse(data[5]);
-                    product = new Käse(id, name, price, quality, expirationDate,dayCounter);
+                    product = new Käse(id, name, price, quality, expirationDate, dayCounter);
                     productsList.add(product);
                 }
                 if (art.equals("Wein")) {
-                    product = new Wein(id, name, price, quality, null,dayCounter);
+                    product = new Wein(id, name, price, quality, null, dayCounter);
                     productsList.add(product);
                 }
 
@@ -63,7 +64,7 @@ public class FileWorker {
         return productsList;
     }
 
-    private void writeProductsInCSV(String fileName,List<Product> productsList) {
+    public void writeProductsInCSV(String fileName, List<Product> productsList) {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             // Schreibe die Kopfzeile der CSV-Datei
@@ -71,8 +72,7 @@ public class FileWorker {
             bw.newLine();
 
             for (Product product : productsList) {
-                String line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + "," + product.getPrice() + "," + product.getQuality() +
-                        "," + dateFormat.format(product.getExpirationDate())+","+product.getDayCounter();
+                String line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + "," + product.getPrice() + "," + product.getQuality() + "," + dateFormat.format(product.getExpirationDate()) + "," + product.getDayCounter();
 
                 bw.write(line);
                 bw.newLine();
@@ -81,11 +81,14 @@ public class FileWorker {
             e.printStackTrace();
         }
     }
+
     public boolean log(String fileName) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+        List<String[]> rows = getLogs(fileName);
+        try (CSVWriter cw = new CSVWriter(new FileWriter(fileName))) {
             // log
-            bw.write(dateFormat.format(new Date()));
-            bw.newLine();
+
+            rows.add(new String[]{dateFormat.format(new Date())});
+            cw.writeAll(rows);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,18 +96,37 @@ public class FileWorker {
         }
 
     }
-    public Date getLastLog(String fileName){
+
+    public List<String[]> getLogs(String fileName) {
+        try (CSVReader csvR = new CSVReader(new FileReader(fileName))) {
+
+            return csvR.readAll();
+        } catch (IOException ex) {
+            System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten " + ex);
+            return null;//todo
+        }
+
+    }
+
+
+    public Date getLastLog(String fileName) {
         try (CSVReader br = new CSVReader(new FileReader(fileName))) {
-            List<String[]> rows=br.readAll();
-            String lastLog=rows.get(rows.size()-1)[0];
-            return  dateFormat.parse(lastLog);
+            List<String[]> rows = br.readAll();
+            String lastLog = rows.get(rows.size() - 1)[0];
+            return dateFormat.parse(lastLog);
 
         } catch (ParseException | IOException ex) {
-            System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten "+ ex);
+            System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten " + ex);
             return null;//todo
-        } catch (CsvException e) {
-            throw new RuntimeException(e);
         }
+//            List<String[]> rows = getLogs(fileName);
+//            String lastLog = rows.get(rows.size() - 1)[0];
+//        try {
+//            return dateFormat.parse(lastLog);
+//        } catch (ParseException e) {
+//            System.out.println("Im Scheduler mit Logging sind Probleme aufgetreten " + e);
+//            return  null;//todo
+//        }
 
     }
 }

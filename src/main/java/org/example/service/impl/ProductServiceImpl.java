@@ -23,6 +23,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product remove(long id) {
+        Product product = productRepository.get(id);
+        productRepository.getDiscardedProducts().add(product);
         return productRepository.removeProduct(id);
     }
 
@@ -32,8 +34,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean checkExpirationDate(Product product) {
-        return product.getExpirationDate() == null || new Date().before(product.getExpirationDate());
+    public boolean checkExpiration(Product product) {
+        return (product.getExpirationDate() == null || new Date().before(product.getExpirationDate())) && !product.isSpoiled();
     }
 
     @Override
@@ -48,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void qualityChange() {
-        for (Product product:getAllProducts()){
+        for (Product product : getAllProducts()) {
             product.qualityChange();
         }
     }

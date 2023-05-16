@@ -5,26 +5,20 @@ import org.example.products.Product;
 import org.example.products.Wein;
 import org.example.service.ProductService;
 import org.example.service.impl.ProductServiceImpl;
-import org.example.worker.FileWorker;
 
 import java.text.SimpleDateFormat;
-import java.util.Optional;
 import java.util.Scanner;
-
-import static java.util.Optional.ofNullable;
 
 public class Manager {
 
-    Scanner scanner = new Scanner(System.in);
-    MarktConsoleRenderer marktConsoleRenderer = new MarktConsoleRenderer(scanner);
     private final ProductService productService = new ProductServiceImpl();
-
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-
+    private final Scanner scanner = new Scanner(System.in);
+    private final MarktConsoleRenderer marktConsoleRenderer = new MarktConsoleRenderer(scanner);
 
     public void start() {
 
-        DailyProductQualityChangeScheduler dailyProductQualityChangeScheduler=new DailyProductQualityChangeScheduler();
+        ProductQualityChangeScheduler dailyProductQualityChangeScheduler = new ProductQualityChangeScheduler();
         dailyProductQualityChangeScheduler.schedulerStart(productService);
         boolean loop = true;
         while (loop) {
@@ -54,9 +48,11 @@ public class Manager {
                     break;
                 case 6:
                     loop = false;
+                    dailyProductQualityChangeScheduler.schedulerStop();
                     break;
                 default:
                     System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
+
             }
         }
 
@@ -66,9 +62,7 @@ public class Manager {
         System.out.println("ART, ID, NAME, NORMALE PRICE, PRICE, QUALITY");
         for (Product product : productService.getDiscardedProducts()) {
 
-            System.out.println(product.getClass().getSimpleName() + ", " + product.getId() + ", " +
-                    product.getName() + ", " + product.getPrice() + ", " + product.getTäglichePreis() + ", "
-                    + product.getQuality());
+            System.out.println(product.getClass().getSimpleName() + ", " + product.getId() + ", " + product.getName() + ", " + product.getPrice() + ", " + product.getDayliPrice() + ", " + product.getQuality());
 
         }
     }
@@ -101,23 +95,21 @@ public class Manager {
         System.out.println("ART, ID, NAME, NORMALE PRICE, PRICE, QUALITY, Verfallsdatum, ZUSTAND");
         for (Product product : productService.getAllProducts()) {
             String ablaufDatum = "";
-            if (productService.checkExpirationDate(product)) {
+            if (productService.checkExpiration(product)) {
                 ablaufDatum = "noch nicht abgelaufen";
-            }else {
+            } else {
                 ablaufDatum = "- abgelaufen - sollten entfernt werden ";
-            }if (product.getClass()== Wein.class){
-                ablaufDatum="";
+            }
+            if (product.getClass() == Wein.class) {
+                ablaufDatum = "";
             }
 
             String expirationDate;//todo think abou it!
-            if (product.getExpirationDate()==null){
-                expirationDate="";
-            }else expirationDate=dateFormat.format(product.getExpirationDate());
+            if (product.getExpirationDate() == null) {
+                expirationDate = "";
+            } else expirationDate = dateFormat.format(product.getExpirationDate());
 
-            System.out.println(product.getClass().getSimpleName() + ", " + product.getId() + ", " +
-                     product.getName() + ", " + product.getPrice() + ", "
-                    + product.getTäglichePreis() + ", " + product.getQuality() + ", "
-                    + expirationDate + " " + ablaufDatum);
+            System.out.println(product.getClass().getSimpleName() + ", " + product.getId() + ", " + product.getName() + ", " + product.getPrice() + ", " + product.getDayliPrice() + ", " + product.getQuality() + ", " + expirationDate + " " + ablaufDatum);
 
         }
     }

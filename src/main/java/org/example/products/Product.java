@@ -10,14 +10,16 @@ public abstract class Product {
     private String name;
     private int quality;
     private Date expirationDate;
-    public Product(long id, String name, double price, int quality, Date expirationDate,int dayCounter) {
+
+    public Product(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
         this.id = id;
         this.price = price;
         this.name = name;
         this.quality = quality;
         this.expirationDate = expirationDate;
-        this.dayCounter=dayCounter;
+        this.dayCounter = dayCounter;
     }
+
     public Product(String name, double price, int quality, Date expirationDate) {
         this.price = price;
         this.name = name;
@@ -75,7 +77,8 @@ public abstract class Product {
 
     public abstract void qualityChange();
 
-    public abstract double getTäglichePreis();
+    public abstract double getDayliPrice();
 
-    public abstract boolean zuEntsorgung();
+    public abstract boolean isSpoiled();
+
 }
