@@ -3,14 +3,18 @@
 
 Punkt 
 
-*Begründe deine Wahl verwendeter Design Patterns
+* Begründe deine Wahl verwendeter Design Patterns
+
 Singlton für LocaleProductsBase.
 Dies ist eine Datenbanksimulation. Sie muss einzigartige sein und Multi Thread, deshalb habe ich 
 eine threadsafe singltone benuzt.Variablen die mehr Thread benutzt könnnen habe ich als
 Atomic erstellt.
-Zuerst hate ich Fabric method für die Product Erstellung,
+Zuerst hate ich Fabric method für die Product Erstellung in Console, 
+der habe ich auch für Date load benutzt. Weiter habe ich mich für Reflection entschieden.
+damit save and load mehr mastabierte sein.
+
 __________________________________________________________________
-*Erstelle ein Modul für einen neuen Produkttypen (gestalte das Produkt und die
+* Erstelle ein Modul für einen neuen Produkttypen (gestalte das Produkt und die
 Verarbeitungsregeln selbst)
 
 Ich habe selbe Whiskey hinzufügt  
@@ -21,4 +25,4 @@ Ich habe selbe Whiskey hinzufügt
 
  __________________________________________________________________
 
-*
+* Erstelle ein Modul für eine weitere Datenquelle (SQL).

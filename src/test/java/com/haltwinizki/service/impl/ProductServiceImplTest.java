@@ -4,6 +4,7 @@ import com.haltwinizki.local.LocaleProductsBase;
 import com.haltwinizki.products.Käse;
 import com.haltwinizki.products.Product;
 import com.haltwinizki.products.Wein;
+import com.haltwinizki.products.Whiskey;
 import com.haltwinizki.repository.impl.LocalProductRepository;
 import com.haltwinizki.service.ProductService;
 
@@ -118,13 +119,16 @@ public class ProductServiceImplTest {
     @Test
     public void testQualityChange() {
         Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 9);
-        Product product2 = new Käse(1, "Emmental", 9.66, 40, date1, 0);
-        Product product3 = new Wein(1, "Deutsche rot", 5.66, 10, null, 8);
+        Product product2 = new Käse(2, "Emmental", 9.66, 40, date1, 0);
+        Product product3 = new Wein(3, "Deutsche rot", 5.66, 10, null, 8);
+        Product product4=new Whiskey(3, "Jack Daniels", 9.66, 20, null, 24);
+
         product1.changeQuality();
         product2.changeQuality();
         product3.changeQuality();
         assertEquals(11, product1.getQuality().get()); // Assuming qualityChange() method reduces quality by 1
         assertEquals(39, product2.getQuality().get());
         assertEquals(10, product3.getQuality().get());
+        assertEquals(0, product4.getQuality().get());
     }
 }

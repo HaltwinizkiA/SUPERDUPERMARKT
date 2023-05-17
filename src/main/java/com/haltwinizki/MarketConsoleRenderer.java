@@ -147,17 +147,21 @@ public class MarketConsoleRenderer {
         System.out.println("Geben Sie bitte price in format 12,99 und drücken Sie ENTER");
         while (true) {
             try {
-                return scanner.nextDouble();
+                double price=scanner.nextDouble();
+                if (price<0){
+                    continue;
+                }
+                return price;
             } catch (InputMismatchException e) {
                 scanner.nextLine();
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
 
             }
         }
+
     }
 
     private Date expirationDateInput() {
-
         Date expirationDate;
         System.out.println("Geben Sie bitte Verfallsdatum in format (dd.MM.yyyy) und drücken Sie ENTER");
         while (true) {

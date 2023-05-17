@@ -5,8 +5,6 @@ import com.haltwinizki.worker.FileWorker;
 import org.apache.log4j.Logger;
 
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,7 +14,12 @@ public class LocaleProductsBase {
     private static final Logger log = Logger.getLogger(LocaleProductsBase.class);
     private static LocaleProductsBase instance;
     private final FileWorker fileWorker;
-    public AtomicLong maxId;
+
+    public AtomicLong getMaxId() {
+        return maxId;
+    }
+
+    private AtomicLong maxId;
     private List<Product> productsList;
     private List<Product> discardedProducts;
 

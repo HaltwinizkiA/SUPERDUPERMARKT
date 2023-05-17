@@ -48,18 +48,20 @@ public abstract class Product implements Cloneable {
                 throw new IllegalArgumentException("Invalid product type: " + type);
         }
     }
+
     public static Product create(String type, String name, double price, int quality, Date expirationDate) {
 
         switch (type) {
             case "WEIN":
-                return new Wein( name, price, quality, expirationDate);
+                return new Wein(name, price, quality, expirationDate, 10);
             case "KÄSE":
-                return new Käse( name, price, quality, expirationDate);
+                return new Käse(name, price, quality, expirationDate);
+            case "WHISKEY":
+                return new Whiskey(name, price, quality, expirationDate);
             default:
                 throw new IllegalArgumentException("Invalid product type: " + type);
         }
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,7 +76,6 @@ public abstract class Product implements Cloneable {
         if (getName() != null ? !getName().equals(product.getName()) : product.getName() != null) return false;
         return getExpirationDate() != null ? getExpirationDate().equals(product.getExpirationDate()) : product.getExpirationDate() == null;
     }
-
     @Override
     public int hashCode() {
         int result;

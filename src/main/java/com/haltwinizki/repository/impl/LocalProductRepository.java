@@ -12,7 +12,7 @@ import java.util.Objects;
 public class LocalProductRepository implements ProductRepository {
     private static final Logger log = Logger.getLogger(FileWorker.class);
 
-    LocaleProductsBase localeProductsBase = LocaleProductsBase.getInstance();
+    private LocaleProductsBase localeProductsBase = LocaleProductsBase.getInstance();
 
     @Override
     public List<Product> getAllProducts() {
@@ -48,7 +48,7 @@ public class LocalProductRepository implements ProductRepository {
 
     @Override
     public Product create(Product product) {
-        product.setId(localeProductsBase.maxId.incrementAndGet());
+        product.setId(localeProductsBase.getMaxId().incrementAndGet());
         localeProductsBase.getProductsList().add(product);
         localeProductsBase.save();
         return product;

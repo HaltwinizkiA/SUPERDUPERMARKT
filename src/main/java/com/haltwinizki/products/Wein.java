@@ -13,7 +13,7 @@ public class Wein extends Product {
         super(id, name, price, quality, expirationDate, dayCounter);
     }
 
-    public Wein(String name, double price, int quality, Date expirationDate) {
+    public Wein(String name, double price, int quality, Date expirationDate, int i) {
         super(name, price, quality, expirationDate);
     }
 
