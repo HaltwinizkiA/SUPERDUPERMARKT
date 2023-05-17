@@ -13,13 +13,11 @@ public interface ProductService {
 
     Product update(Product product);
 
-    boolean checkExpiration(Product product);
-
     List<Product> getAllProducts();
 
     List<Product> getDiscardedProducts();
 
-    void qualityChange();
+    void changeQuality();
 
 
 }

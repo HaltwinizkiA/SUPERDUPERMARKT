@@ -6,6 +6,7 @@ import liquibase.util.csv.CSVReader;
 import liquibase.util.csv.CSVWriter;
 import com.haltwinizki.products.Käse;
 import com.haltwinizki.products.Wein;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.text.ParseException;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 public class FileWorker {
+    private static final Logger log = Logger.getLogger(FileWorker.class);
     private static final int ART_NUM = 0;
     private static final int ID_NUM = 1;
     private static final int NAME_NUM = 2;
@@ -28,50 +30,42 @@ public class FileWorker {
         return dateFormat;
     }
 
-    public List<Product> readProductsAusCSV(String fileName) {
+    public List<Product> readProductsAusCSV(String fileName) throws IOException, ParseException {
         List<Product> productsList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            boolean headerSkipped = false;
+        try (CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
 
-            while ((line = br.readLine()) != null) {
-                if (!headerSkipped) {
-                    // Überspringe die Kopfzeile
-                    headerSkipped = true;
-                    continue;
-                }
+           List<String[]> rows=csvReader.readAll();
 
-                String[] data = line.split(",");
 
-                String art = data[ART_NUM];
-                int id = Integer.parseInt(data[ID_NUM]);
-                String name = data[NAME_NUM];
-                double price = Double.parseDouble(data[PRICE_NUM]);
-                int quality = Integer.parseInt(data[QUALITY_NUM]);
-                int dayCounter = Integer.parseInt(data[DAY_COUNTER_NUM]);
+
+            for (int i=1;i<rows.size();i++){
+
+                String art = rows.get(i)[ART_NUM];
+                long id = Long.parseLong(rows.get(i)[ID_NUM]);
+                String name = rows.get(i)[NAME_NUM];
+                double price = Double.parseDouble(rows.get(i)[PRICE_NUM]);
+                int quality = Integer.parseInt(rows.get(i)[QUALITY_NUM]);
+                int dayCounter = Integer.parseInt(rows.get(i)[DAY_COUNTER_NUM]);
 
                 Product product;
 
-                if (art.equals("Käse")) {
-                    Date expirationDate = dateFormat.parse(data[DATE_NUM]);
+                if ("Käse".equals(art)) {
+                    Date expirationDate = dateFormat.parse(rows.get(i)[DATE_NUM]);
                     product = new Käse(id, name, price, quality, expirationDate, dayCounter);
                     productsList.add(product);
                 }
-                if (art.equals("Wein")) {
+                if ("Wein".equals(art)) {
                     product = new Wein(id, name, price, quality, null, dayCounter);
                     productsList.add(product);
                 }
 
 
             }
-        } catch (IOException | ParseException e) {
-            System.out.println("Produktdatei nicht gefunden");
-            Logger.log(e);
         }
         return productsList;
     }
 
-    public void writeProductsInCSV(String fileName, List<Product> productsList) {
+    public void writeProductsInCSV(String fileName, List<Product> productsList) throws IOException {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             // Schreibe die Kopfzeile der CSV-Datei
@@ -79,22 +73,19 @@ public class FileWorker {
             bw.newLine();
 
             for (Product product : productsList) {
-                String line="";
+                String line = "";
 
-                if (product.getClass().getSimpleName().equals("Käse")) {
-                    line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + ","
-                            + product.getPrice() + "," + product.getQuality() + "," + dateFormat.format(product.getExpirationDate()) + "," + product.getDayCounter();
-                }if (product.getClass().getSimpleName().equals("Wein")) {
-                    line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + ","
-                            + product.getPrice() + "," + product.getQuality() + "," + null + "," + product.getDayCounter();
+                if ("Käse".equals(product.getClass().getSimpleName())) {
+                    line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + "," + product.getPrice() + "," + product.getQuality().get() + "," + dateFormat.format(product.getExpirationDate()) + "," + product.getDayCounter();
+                }
+                if ("Wein".equals(product.getClass().getSimpleName())) {
+                    line = product.getClass().getSimpleName() + "," + product.getId() + "," + product.getName() + "," + product.getPrice() + "," + product.getQuality().get() + "," + null + "," + product.getDayCounter();
                 }
 
 
                 bw.write(line);
                 bw.newLine();
             }
-        } catch (IOException e) {
-            Logger.log(e);
         }
     }
 
@@ -105,7 +96,7 @@ public class FileWorker {
             cw.writeAll(rows);
             return true;
         } catch (IOException e) {
-            Logger.log(e);
+            log.info(e);;
             return false;
         }
 
@@ -115,7 +106,7 @@ public class FileWorker {
         try (CSVReader csvR = new CSVReader(new FileReader(fileName))) {
             return csvR.readAll();
         } catch (IOException ex) {
-            Logger.log("mit Quality Logging sind Probleme aufgetreten " + ex);
+            log.info("mit Quality Logging sind Probleme aufgetreten " + ex);
             return null;//todo
         }
 
@@ -129,7 +120,7 @@ public class FileWorker {
             return dateFormat.parse(lastLog);
 
         } catch (ParseException | IOException ex) {
-            Logger.log("mit Quality Logging sind Probleme aufgetreten " + ex);
+            log.info("mit Quality Logging sind Probleme aufgetreten " + ex);
             return null;//todo
         }
     }

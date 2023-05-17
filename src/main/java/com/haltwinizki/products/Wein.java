@@ -3,6 +3,9 @@ package com.haltwinizki.products;
 import java.util.Date;
 
 public class Wein extends Product {
+    private final int maxQuality = 50;
+    private final int qualityChangeRate = 10;
+
     public Wein(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
         super(id, name, price, quality, expirationDate, dayCounter);
     }
@@ -12,13 +15,15 @@ public class Wein extends Product {
     }
 
     @Override
-    public void qualityChange() {
+    public Wein clone() throws CloneNotSupportedException {
+        return (Wein) super.clone();
+    }
 
-        if (getQuality() < 50 && this.getDayCounter() == 10) {
-            this.setQuality(getQuality() + 1);
-            this.setDayCounter(0);
-        } else {
-            this.setDayCounter(this.getDayCounter() + 1);
+    @Override
+    public void changeQuality() {
+        if (getQuality().get() < maxQuality && this.getDayCounter().incrementAndGet() == qualityChangeRate) {
+            this.getQuality().getAndIncrement();
+            this.getDayCounter().set(0);
         }
 
     }

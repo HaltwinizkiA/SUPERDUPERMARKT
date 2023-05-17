@@ -5,7 +5,6 @@ import com.haltwinizki.repository.ProductRepository;
 import com.haltwinizki.repository.impl.LocalProductRepository;
 import com.haltwinizki.service.ProductService;
 
-import java.util.Date;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
@@ -18,12 +17,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product get(long id) {
-        return productRepository.getById(id);
+        return productRepository.get(id);
     }
 
     @Override
     public Product remove(long id) {
-        Product product = productRepository.removeProduct(id);
+        Product product = productRepository.delete(id);
         productRepository.getDiscardedProducts().add(product);
         return product;
     }
@@ -31,11 +30,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product update(Product product) {
         return productRepository.update(product);
-    }
-
-    @Override
-    public boolean checkExpiration(Product product) {
-        return (product.getExpirationDate() == null || new Date().before(product.getExpirationDate())) && !product.isSpoiled();
     }
 
     @Override
@@ -49,9 +43,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void qualityChange() {
+    public void changeQuality() {
         for (Product product : getAllProducts()) {
-            product.qualityChange();
+            product.changeQuality();
         }
     }
 }

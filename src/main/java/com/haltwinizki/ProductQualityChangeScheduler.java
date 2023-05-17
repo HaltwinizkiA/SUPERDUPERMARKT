@@ -3,13 +3,15 @@ package com.haltwinizki;
 
 import com.haltwinizki.service.ProductService;
 import com.haltwinizki.worker.FileWorker;
-import com.haltwinizki.worker.Logger;
+import org.apache.log4j.Logger;
 
 
 import java.util.Date;
 
 
 public class ProductQualityChangeScheduler {
+    private static final Logger log = Logger.getLogger(FileWorker.class);
+
     private static final String FILENAME = "src/main/resources/logQualityChange.csv";
     private static final int TIMEOUT=86400000;// ein Tag in Milisekunden
     private final FileWorker fileWorker = new FileWorker();
@@ -19,7 +21,7 @@ public class ProductQualityChangeScheduler {
         Runnable task = new Runnable() {
             @Override
             public void run() {
-                service.qualityChange();
+                service.changeQuality();
                 System.out.println("\n Qualität wurde geändert");
             }
         };
@@ -37,7 +39,7 @@ public class ProductQualityChangeScheduler {
                     try {
                         Thread.sleep(TIMEOUT);
                     } catch (InterruptedException e) {
-                        Logger.log(e);
+                        log.info(e);
                     }
                 }
             }

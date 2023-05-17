@@ -1,28 +1,29 @@
 package com.haltwinizki.products;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class Product {
-    private int dayCounter;// Ich habe diese Eigenschaft hinzugefügt, um die Qualitätsänderung zu verfolgen
+public abstract class Product implements Cloneable {
+    private AtomicInteger dayCounter;// Ich habe diese Eigenschaft hinzugefügt, um die Qualitätsänderung zu verfolgen
     private long id;
     private double price;
     private String name;
-    private int quality;
+    private final AtomicInteger quality;
     private Date expirationDate;
 
     public Product(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
         this.id = id;
         this.price = price;
         this.name = name;
-        this.quality = quality;
+        this.quality = new AtomicInteger(quality);
         this.expirationDate = expirationDate;
-        this.dayCounter = dayCounter;
+        this.dayCounter = new AtomicInteger(dayCounter);
     }
 
     public Product(String name, double price, int quality, Date expirationDate) {
         this.price = price;
         this.name = name;
-        this.quality = quality;
+        this.quality = new AtomicInteger(quality);
         this.expirationDate = expirationDate;
     }
 
@@ -45,22 +46,18 @@ public abstract class Product {
     public int hashCode() {
         int result;
         long temp;
-        result = getDayCounter();
+        result = getDayCounter().get();
         result = 31 * result + (int) (getId() ^ (getId() >>> 32));
         temp = Double.doubleToLongBits(getPrice());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + getQuality();
+        result = 31 * result + getQuality().get();
         result = 31 * result + (getExpirationDate() != null ? getExpirationDate().hashCode() : 0);
         return result;
     }
 
-    public int getDayCounter() {
+    public AtomicInteger getDayCounter() {
         return dayCounter;
-    }
-
-    public void setDayCounter(int dayCounter) {
-        this.dayCounter = dayCounter;
     }
 
     public long getId() {
@@ -87,12 +84,8 @@ public abstract class Product {
         this.name = name;
     }
 
-    public int getQuality() {
+    public AtomicInteger getQuality() {
         return quality;
-    }
-
-    public void setQuality(int quality) {
-        this.quality = quality;
     }
 
     public Date getExpirationDate() {
@@ -103,11 +96,18 @@ public abstract class Product {
         this.expirationDate = expirationDate;
     }
 
-    public abstract void qualityChange();
+    public abstract void changeQuality();
 
-    public abstract double getDailyPrice();
+    public double getDailyPrice() {
+        return getPrice() + 0.10 * getQuality().get();
+    }
 
     public abstract boolean isSpoiled();
 
     public abstract boolean checkExpiration();
+
+    @Override
+    public Product clone() throws CloneNotSupportedException {
+        return (Product) super.clone();
+    }
 }

@@ -3,65 +3,69 @@ package com.haltwinizki.repository.impl;
 import com.haltwinizki.local.LocaleProductsBase;
 import com.haltwinizki.products.Product;
 import com.haltwinizki.repository.ProductRepository;
+import com.haltwinizki.worker.FileWorker;
+import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 
 public class LocalProductRepository implements ProductRepository {
+    private static final Logger log = Logger.getLogger(FileWorker.class);
+
+    LocaleProductsBase localeProductsBase = LocaleProductsBase.getInstance();
 
     @Override
     public List<Product> getAllProducts() {
-        return LocaleProductsBase.getInstance().getProductsList();
+        return localeProductsBase.getProductsList();
     }
 
     @Override
-    public Product removeProduct(long id) {
-        Product removedProduct = getById(id);
-        LocaleProductsBase.getInstance().getProductsList().remove(removedProduct);
+    public Product delete(long id) {
+        Product removedProduct = get(id);
+        localeProductsBase.getProductsList().removeIf(product -> Objects.equals(id, product.getId()));
+        localeProductsBase.save();
         return removedProduct;
     }
 
     @Override
-    public Product update(Product product) {
-        Product toRemove = getById(product.getId()); //todo
-        LocaleProductsBase.getInstance().getProductsList().remove(toRemove);
-        LocaleProductsBase.getInstance().getProductsList().add(product);
-        LocaleProductsBase.getInstance().save();
-        return product;
+    public Product update(Product updatedProduct) {
+        Product productInDb = localeProductsBase.getProductsList().stream().filter(product -> product.getId() == updatedProduct.getId()).findFirst().orElse(null);
+        if (productInDb.getQuality() != updatedProduct.getQuality()) {
+            productInDb.getQuality().set(updatedProduct.getQuality().get());
+        }
+        if (updatedProduct.getExpirationDate() != null && !productInDb.getExpirationDate().equals(updatedProduct.getExpirationDate())) {
+            productInDb.setExpirationDate(updatedProduct.getExpirationDate());
+        }
+        if (!productInDb.getName().equals(updatedProduct.getName())) {
+            productInDb.setName(updatedProduct.getName());
+        }
+        if (productInDb.getPrice() != updatedProduct.getPrice()) {
+            productInDb.setPrice(updatedProduct.getPrice());
+        }
+        localeProductsBase.save();
+        return get(updatedProduct.getId());
     }
 
     @Override
     public Product create(Product product) {
-        product.setId(getFreeId());
-        LocaleProductsBase.getInstance().getProductsList().add(product);
-        LocaleProductsBase.getInstance().save();
+        product.setId(localeProductsBase.maxId.incrementAndGet());
+        localeProductsBase.getProductsList().add(product);
+        localeProductsBase.save();
         return product;
     }
 
-    public long getFreeId() {
-        long id = 0;
-        for (Product product : LocaleProductsBase.getInstance().getProductsList()) {
-            if (id < product.getId()) {
-                id = product.getId();
-            }
-        }
-        id++;
-        return id;
-    }
 
     @Override
-    public Product getById(long id) {
-        Product productGet = null;
-        for (Product product : LocaleProductsBase.getInstance().getProductsList()) {
-            if (product.getId() == id) {
-                productGet = product;
-            }
+    public Product get(long id) {
+        try {
+            return localeProductsBase.getProductsList().stream().filter(product -> product.getId() == id).findFirst().orElse(null).clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
         }
-
-        return productGet;
     }
 
     @Override
     public List<Product> getDiscardedProducts() {
-        return LocaleProductsBase.getInstance().getDiscardedProducts();
+        return localeProductsBase.getDiscardedProducts();
     }
 }

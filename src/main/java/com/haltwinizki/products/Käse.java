@@ -3,7 +3,7 @@ package com.haltwinizki.products;
 import java.util.Date;
 
 public class Käse extends Product {
-
+    private final int minQuality = 30;
 
     public Käse(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
         super(id, name, price, quality, expirationDate, dayCounter);
@@ -14,18 +14,18 @@ public class Käse extends Product {
     }
 
     @Override
-    public void qualityChange() {
-        this.setQuality(getQuality() - 1);
+    public Käse clone() throws CloneNotSupportedException {
+        return (Käse) super.clone();
     }
 
     @Override
-    public double getDailyPrice() {
-        return getPrice() + 0.10 * getQuality();
+    public void changeQuality() {
+        this.getQuality().decrementAndGet();
     }
 
     @Override
     public boolean isSpoiled() {
-        return getQuality() < 30;
+        return getQuality().get() < minQuality;
     }
 
     @Override
