@@ -20,38 +20,40 @@ public class MarketConsoleRenderer {
         this.productService = productService;
     }
 
-    public boolean render() {
-        System.out.println("1. Produkt hinzufügen");
-        System.out.println("2. Produkt aktualisieren");
-        System.out.println("3. Produkt entfernen");
-        System.out.println("4. Taglicheübersicht");
-        System.out.println("5. ausrangierte Produkte");
-        System.out.println("6. Beenden");
-        System.out.print("Wählen Sie eine Option: ");
-        int choice = scanner.nextInt();
-        switch (choice) {
-            case 1:
-                addProduct();
-                break;
-            case 2:
-                updateProduct();
-                break;
-            case 3:
-                removeProduct();
-                break;
-            case 4:
-                dailyOverview();
-                break;
-            case 5:
-                discardedProducts();
-                break;
-            case 6:
-                return false;
-            default:
-                System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
+    public void render() {
+        while (true) {
+            System.out.println("1. Produkt hinzufügen");
+            System.out.println("2. Produkt aktualisieren");
+            System.out.println("3. Produkt entfernen");
+            System.out.println("4. Taglicheübersicht");
+            System.out.println("5. ausrangierte Produkte");
+            System.out.println("6. Beenden");
+            System.out.print("Wählen Sie eine Option: ");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    addProduct();
+                    continue;
+                case 2:
+                    updateProduct();
+                    continue;
+                case 3:
+                    removeProduct();
+                    continue;
+                case 4:
+                    dailyOverview();
+                    continue;
+                case 5:
+                    discardedProducts();
+                    continue;
+                case 6:
+                    break;
+                default:
+                    System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
 
+            }
         }
-        return true;
+
     }
 
     private void discardedProducts() {
@@ -86,20 +88,30 @@ public class MarketConsoleRenderer {
         printProducts(productService.getAllProducts());
     }
 
-    private Product createProduct() {
+    private Product createProduct() {//todo problem with art
 
         System.out.println("Wählen Sie bitte Product Art aus ");
         while (true) {
             String art = scanner.next();
             art=art.toUpperCase();
             try {
-                return Product.create(art, nameInput(), inputPrice(), qualityInput(), expirationDateInput());
+                Product product= Product.create(art, inputName(), inputPrice(), inputQuality(), inputExpirationDate());
+                return product;
             }catch (Exception e){
             System.out.println("Sie haben den falschen Art eingegeben");
+            continue;
         }
 
         }
 
+    }
+
+    private String inputArt(){
+        while (true) {
+            String art = scanner.next();
+            art=art.toUpperCase();
+
+        }
     }
 
     private Product updateProductMenu(Product product) {
@@ -114,16 +126,16 @@ public class MarketConsoleRenderer {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    product.setName(nameInput());
+                    product.setName(inputName());
                     break;
                 case 2:
                     product.setPrice(inputPrice());
                     break;
                 case 3:
-                    product.getQuality().set((qualityInput()));
+                    product.getQuality().set((inputQuality()));
                     break;
                 case 4:
-                    product.setExpirationDate(expirationDateInput());
+                    product.setExpirationDate(inputExpirationDate());
                     break;
                 case 5:
                     loop = false;
@@ -136,7 +148,7 @@ public class MarketConsoleRenderer {
         return product;
     }
 
-    private String nameInput() {//todo
+    private String inputName() {//todo
         System.out.println("Geben Sie bitte name und drücken Sie ENTER");
         return scanner.next();
     }
@@ -160,7 +172,7 @@ public class MarketConsoleRenderer {
 
     }
 
-    private Date expirationDateInput() {//todo
+    private Date inputExpirationDate() {//todo
         Date expirationDate;
         System.out.println("Geben Sie bitte Verfallsdatum in format (dd.MM.yyyy) und drücken Sie ENTER");
         while (true) {
@@ -175,7 +187,7 @@ public class MarketConsoleRenderer {
         return expirationDate;
     }
 
-    private int qualityInput() {
+    private int inputQuality() {
         System.out.println("Geben Sie bitte qualität und drücken Sie ENTER");
         while (true) {
             try {

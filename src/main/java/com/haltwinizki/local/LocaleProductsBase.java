@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LocaleProductsBase {
@@ -20,8 +21,8 @@ public class LocaleProductsBase {
     }
 
     private AtomicLong maxId;
-    private List<Product> productsList;//todo threadsafe
-    private List<Product> discardedProducts;
+    private CopyOnWriteArrayList<Product> productsList;
+    private CopyOnWriteArrayList <Product> discardedProducts;
 
     public LocaleProductsBase() {
         fileWorker = new FileWorker();
@@ -59,7 +60,6 @@ public class LocaleProductsBase {
     public void save() {
         try {
             fileWorker.writeProductsInCSVReflection(PRODUCT_FILE_NAME, productsList);
-
             fileWorker.writeProductsInCSVReflection(DISCARDED_PRODUCT_FILE_NAME, discardedProducts);
         } catch (IllegalAccessException e) {
             System.out.println("Datenbank nicht gespeichert");

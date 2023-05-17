@@ -23,6 +23,7 @@ public class LocalProductRepository implements ProductRepository {
     public Product remove(long id) {
         Product removedProduct = get(id);
         localeProductsBase.getProductsList().removeIf(product -> Objects.equals(id, product.getId()));
+        localeProductsBase.getDiscardedProducts().add(removedProduct);
         localeProductsBase.save();
         return removedProduct;
     }

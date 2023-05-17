@@ -22,9 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product remove(long id) {
-        Product product = productRepository.remove(id);
-        productRepository.getDiscardedProducts().add(product);//todo in dao
-        return product;
+        return productRepository.remove(id);
     }
 
     @Override

@@ -19,11 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileWorker {
     private static final Logger log = Logger.getLogger(FileWorker.class);
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     private final String head = "ART,ID,NAME,PRICE,QUALITY,EXPIRATION DATE(dd.MM.yyyy),DAY COUNTER";
 
     private Class getTypeBySimpleName(String s) {
@@ -41,12 +42,12 @@ public class FileWorker {
 
     }
 
-    public SimpleDateFormat getDateFormat() {
-        return dateFormat;
+    public SimpleDateFormat getDATE_FORMAT() {
+        return DATE_FORMAT;
     }
 
-    public List<Product> readProductsAusCSVReflection(String fileName) throws Exception {
-        List<Product> productList = new ArrayList<>();
+    public CopyOnWriteArrayList <Product> readProductsAusCSVReflection(String fileName) throws Exception {
+        CopyOnWriteArrayList <Product> productList = new CopyOnWriteArrayList <>();
         try (CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
             List<String[]> rows = csvReader.readAll();
             for (int i = 1; i < rows.size(); i++) {
@@ -111,7 +112,7 @@ public class FileWorker {
 
     private String parseFieldValue(Object object) {
         if (object != null && object.getClass() == Date.class) {
-            return dateFormat.format(object);
+            return DATE_FORMAT.format(object);
         }
         return String.valueOf(object);
     }
@@ -130,7 +131,7 @@ public class FileWorker {
         } else if (fieldType == String.class) {
             return value;
         } else if (fieldType == Date.class) {
-            return dateFormat.parse(value);
+            return DATE_FORMAT.parse(value);
         } else {
             throw new IllegalArgumentException("Unsupported field type: " + fieldType.getName());
         }
@@ -139,7 +140,7 @@ public class FileWorker {
     public boolean qualityChangeLog(String fileName) {
         List<String[]> rows = getQualityChangeLogs(fileName);
         try (CSVWriter cw = new CSVWriter(new FileWriter(fileName))) {
-            rows.add(new String[]{dateFormat.format(new Date())});
+            rows.add(new String[]{DATE_FORMAT.format(new Date())});
             cw.writeAll(rows);
             return true;
         } catch (IOException e) {
@@ -163,7 +164,7 @@ public class FileWorker {
         try (CSVReader br = new CSVReader(new FileReader(fileName))) {
             List<String[]> rows = br.readAll();
             String lastLog = rows.get(rows.size() - 1)[0];
-            return dateFormat.parse(lastLog);
+            return DATE_FORMAT.parse(lastLog);
 
         } catch (ParseException | IOException ex) {
             log.error("mit Quality Logging sind Probleme aufgetreten " + ex);

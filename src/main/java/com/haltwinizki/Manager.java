@@ -18,9 +18,7 @@ public class Manager {
 
         ProductQualityChangeScheduler dailyProductQualityChangeScheduler = new ProductQualityChangeScheduler();
         dailyProductQualityChangeScheduler.schedulerStart(productService);
-        while (marketConsoleRenderer.render()) {//todo cicl in render
-
-        }
+        marketConsoleRenderer.render();
         dailyProductQualityChangeScheduler.schedulerStop();
 
     }
