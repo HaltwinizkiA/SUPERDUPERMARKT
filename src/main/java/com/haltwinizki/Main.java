@@ -1,10 +1,7 @@
 package com.haltwinizki;
 
-
-
-
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         Manager manager = new Manager();
         manager.start();
     }

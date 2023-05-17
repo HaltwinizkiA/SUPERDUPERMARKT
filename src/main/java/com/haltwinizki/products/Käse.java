@@ -5,6 +5,9 @@ import java.util.Date;
 public class Käse extends Product {
     private final int minQuality = 30;
 
+    public Käse() {
+    }
+
     public Käse(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
         super(id, name, price, quality, expirationDate, dayCounter);
     }

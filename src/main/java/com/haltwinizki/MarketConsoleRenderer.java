@@ -49,7 +49,7 @@ public class MarketConsoleRenderer {
                 break;
             case 6:
                 return false;
-                default:
+            default:
                 System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
 
         }
@@ -93,14 +93,13 @@ public class MarketConsoleRenderer {
         System.out.println("Wählen Sie bitte Product Art aus ");
         while (true) {
             String art = scanner.next();
-            if (art.equalsIgnoreCase("wein")) {
+            art=art.toUpperCase();
+            try {
+                return Product.create(art, nameInput(), priceInput(), qualityInput(), expirationDateInput());
+            }catch (Exception e){
+            System.out.println("Sie haben den falschen Art eingegeben");
+        }
 
-                return new Wein(nameInput(), priceInput(), qualityInput(), null);
-            }
-            if (art.equalsIgnoreCase("käse")) {
-                return new Käse(nameInput(), priceInput(), qualityInput(), expirationDateInput());
-
-            } else System.out.println("Sie haben den falschen Art eingegeben");
         }
 
     }
@@ -188,21 +187,18 @@ public class MarketConsoleRenderer {
     public void printProducts(List<Product> productList) {
         System.out.format("%12s %10s %27s %15s %12s %12s %12s %23s\n", "ART |", "ID |", "NAME |", "NORMALE PRICE |", "PRICE |", "QUALITY |", "Verfallsdatum |", "ZUSTAND |");
         for (Product product : productList) {
-            String ablaufDatum = "";
+            String condition = "";
             System.out.format("%12s %4$6s %2$25s %3$12s %1$12s %1$12s %5$12s %6$12s \n", "-----------|", "--------------------------|", "--------------|", "---------|", "--------------|", "----------------------|");
-            if (product.isSpoiled()) {
-                ablaufDatum = "noch nicht abgelaufen";
+            if (!product.checkExpiration()) {
+                condition = "abgelaufen ";
             } else {
-                ablaufDatum = "abgelaufen ";
-            }
-            if (product.getClass() == Wein.class) {
-                ablaufDatum = "";
+                condition = "gut";
             }
             String expirationDate;
             if (product.getExpirationDate() == null) {
                 expirationDate = "";
             } else expirationDate = dateFormat.format(product.getExpirationDate());
-            System.out.format("%10.8s | %8s | %25.26s |%14s | %10.4s | %10s | %13s | %21s |\n", product.getClass().getSimpleName(), product.getId(), product.getName(), product.getPrice(), product.getDailyPrice(), product.getQuality(), expirationDate, ablaufDatum);
+            System.out.format("%10.8s | %8s | %25.26s |%14s | %10.4s | %10s | %13s | %21s |\n", product.getClass().getSimpleName(), product.getId(), product.getName(), product.getPrice(), product.getDailyPrice(), product.getQuality(), expirationDate, condition);
         }
 
     }

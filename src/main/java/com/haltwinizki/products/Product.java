@@ -1,15 +1,26 @@
 package com.haltwinizki.products;
 
+import com.haltwinizki.annotation.CsvProperty;
+
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Product implements Cloneable {
+    @CsvProperty(columnNumber = 6)
     private AtomicInteger dayCounter;// Ich habe diese Eigenschaft hinzugefügt, um die Qualitätsänderung zu verfolgen
+    @CsvProperty(columnNumber = 1)
     private long id;
+    @CsvProperty(columnNumber = 3)
     private double price;
+    @CsvProperty(columnNumber = 2)
     private String name;
-    private final AtomicInteger quality;
+    @CsvProperty(columnNumber = 4)
+    private AtomicInteger quality;
+    @CsvProperty(columnNumber = 5)
     private Date expirationDate;
+
+    public Product() {
+    }
 
     public Product(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
         this.id = id;
@@ -25,6 +36,28 @@ public abstract class Product implements Cloneable {
         this.name = name;
         this.quality = new AtomicInteger(quality);
         this.expirationDate = expirationDate;
+    }
+
+    public static Product create(String type, long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
+        switch (type) {
+            case "Wein":
+                return new Wein(id, name, price, quality, expirationDate, dayCounter);
+            case "Käse":
+                return new Käse(id, name, price, quality, expirationDate, dayCounter);
+            default:
+                throw new IllegalArgumentException("Invalid product type: " + type);
+        }
+    }
+    public static Product create(String type, String name, double price, int quality, Date expirationDate) {
+
+        switch (type) {
+            case "WEIN":
+                return new Wein( name, price, quality, expirationDate);
+            case "KÄSE":
+                return new Käse( name, price, quality, expirationDate);
+            default:
+                throw new IllegalArgumentException("Invalid product type: " + type);
+        }
     }
 
     @Override
@@ -105,16 +138,7 @@ public abstract class Product implements Cloneable {
     public abstract boolean isSpoiled();
 
     public abstract boolean checkExpiration();
-    public static  Product create(String type,long id, String name, double price, int quality, Date expirationDate, int dayCounter){
-        switch (type) {
-            case "Wein":
-                return new Wein(id, name, price, quality, expirationDate, dayCounter);
-            case "Käse":
-                return new Käse(id, name, price, quality, expirationDate, dayCounter);
-            default:
-                throw new IllegalArgumentException("Invalid product type: " + type);
-        }
-    }
+
     @Override
     public Product clone() throws CloneNotSupportedException {
         return (Product) super.clone();

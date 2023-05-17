@@ -117,7 +117,7 @@ public class ProductServiceImplTest {
 
     @Test
     public void testQualityChange() {
-        Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
+        Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 9);
         Product product2 = new Käse(1, "Emmental", 9.66, 40, date1, 0);
         Product product3 = new Wein(1, "Deutsche rot", 5.66, 10, null, 8);
         product1.changeQuality();

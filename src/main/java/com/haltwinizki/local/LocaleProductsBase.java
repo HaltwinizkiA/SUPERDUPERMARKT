@@ -16,21 +16,19 @@ public class LocaleProductsBase {
     private static final Logger log = Logger.getLogger(LocaleProductsBase.class);
     private static LocaleProductsBase instance;
     private final FileWorker fileWorker;
+    public AtomicLong maxId;
     private List<Product> productsList;
     private List<Product> discardedProducts;
-
-    public AtomicLong maxId;
 
     public LocaleProductsBase() {
         fileWorker = new FileWorker();
         try {
-            productsList = fileWorker.readProductsAusCSV(PRODUCT_FILE_NAME);
-            discardedProducts = fileWorker.readProductsAusCSV(DISCARDED_PRODUCT_FILE_NAME);
-        } catch (IOException|ParseException e) {
+            productsList = fileWorker.readProductsAusCSVReflection(PRODUCT_FILE_NAME);
+            discardedProducts = fileWorker.readProductsAusCSVReflection(DISCARDED_PRODUCT_FILE_NAME);
+        } catch (Exception e) {
             System.out.println("Datenbank nicht geladen");
-            log.info("Datenbank nicht geladen",e);
+            log.info("Datenbank nicht geladen", e);
         }
-
         checkMaxId();
     }
 
@@ -47,9 +45,7 @@ public class LocaleProductsBase {
 
     private void checkMaxId() {
         this.maxId = new AtomicLong();
-        productsList.stream().map(Product::getId)
-                .max(Long::compareTo)
-                .ifPresent(maxId::set);
+        productsList.stream().map(Product::getId).max(Long::compareTo).ifPresent(maxId::set);
     }
 
     public List<Product> getDiscardedProducts() {
@@ -58,14 +54,13 @@ public class LocaleProductsBase {
 
     public void save() {
         try {
-            fileWorker.writeProductsInCSV(PRODUCT_FILE_NAME, productsList);
+            fileWorker.writeProductsInCSVReflection(PRODUCT_FILE_NAME, productsList);
 
-            fileWorker.writeProductsInCSV(DISCARDED_PRODUCT_FILE_NAME, discardedProducts);
-        } catch (IOException e) {
+            fileWorker.writeProductsInCSVReflection(DISCARDED_PRODUCT_FILE_NAME, discardedProducts);
+        } catch (IllegalAccessException e) {
             System.out.println("Datenbank nicht gespeichert");
-            log.info("Datenbank nicht gespeichert",e);
+            log.info("Datenbank nicht gespeichert", e);
         }
-
     }
 
     public List<Product> getProductsList() {

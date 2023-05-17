@@ -13,7 +13,7 @@ public class ProductQualityChangeScheduler {
     private static final Logger log = Logger.getLogger(FileWorker.class);
 
     private static final String FILENAME = "src/main/resources/logQualityChange.csv";
-    private static final int TIMEOUT=86400000;// ein Tag in Milisekunden
+    private static final int TIMEOUT = 86400000;// ein Tag in Milisekunden
     private final FileWorker fileWorker = new FileWorker();
     private Thread thread;
 
@@ -44,11 +44,7 @@ public class ProductQualityChangeScheduler {
                 }
             }
         });
-
-
         thread.start();
-
-
     }
 
     public void schedulerStop() {
