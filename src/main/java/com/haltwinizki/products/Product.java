@@ -105,7 +105,16 @@ public abstract class Product implements Cloneable {
     public abstract boolean isSpoiled();
 
     public abstract boolean checkExpiration();
-
+    public static  Product create(String type,long id, String name, double price, int quality, Date expirationDate, int dayCounter){
+        switch (type) {
+            case "Wein":
+                return new Wein(id, name, price, quality, expirationDate, dayCounter);
+            case "Käse":
+                return new Käse(id, name, price, quality, expirationDate, dayCounter);
+            default:
+                throw new IllegalArgumentException("Invalid product type: " + type);
+        }
+    }
     @Override
     public Product clone() throws CloneNotSupportedException {
         return (Product) super.clone();

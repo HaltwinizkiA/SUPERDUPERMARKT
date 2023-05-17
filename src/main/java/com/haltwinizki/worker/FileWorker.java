@@ -34,32 +34,20 @@ public class FileWorker {
         List<Product> productsList = new ArrayList<>();
         try (CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
 
-           List<String[]> rows=csvReader.readAll();
-
-
-
+            List<String[]> rows=csvReader.readAll();
             for (int i=1;i<rows.size();i++){
-
                 String art = rows.get(i)[ART_NUM];
                 long id = Long.parseLong(rows.get(i)[ID_NUM]);
                 String name = rows.get(i)[NAME_NUM];
                 double price = Double.parseDouble(rows.get(i)[PRICE_NUM]);
                 int quality = Integer.parseInt(rows.get(i)[QUALITY_NUM]);
                 int dayCounter = Integer.parseInt(rows.get(i)[DAY_COUNTER_NUM]);
-
-                Product product;
-
-                if ("Käse".equals(art)) {
-                    Date expirationDate = dateFormat.parse(rows.get(i)[DATE_NUM]);
-                    product = new Käse(id, name, price, quality, expirationDate, dayCounter);
-                    productsList.add(product);
+                Date date=null;
+                if (!rows.get(i)[DATE_NUM].equals("null")){
+                    date=dateFormat.parse(rows.get(i)[DATE_NUM]);
                 }
-                if ("Wein".equals(art)) {
-                    product = new Wein(id, name, price, quality, null, dayCounter);
-                    productsList.add(product);
-                }
-
-
+                Product product= Product.create(art,i,name,price,quality,date,dayCounter);
+                productsList.add(product);
             }
         }
         return productsList;
