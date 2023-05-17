@@ -6,18 +6,19 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Product implements Cloneable {
-    @CsvProperty(columnNumber = 6)
-    private AtomicInteger dayCounter;// Ich habe diese Eigenschaft hinzugefügt, um die Qualitätsänderung zu verfolgen
+
     @CsvProperty(columnNumber = 1)
     private long id;
-    @CsvProperty(columnNumber = 3)
-    private double price;
     @CsvProperty(columnNumber = 2)
     private String name;
+    @CsvProperty(columnNumber = 3)
+    private double price;
     @CsvProperty(columnNumber = 4)
     private AtomicInteger quality;
     @CsvProperty(columnNumber = 5)
     private Date expirationDate;
+    @CsvProperty(columnNumber = 6)
+    private AtomicInteger dayCounter;// Ich habe diese Eigenschaft hinzugefügt, um die Qualitätsänderung zu verfolgen
 
     public Product() {
     }
@@ -62,6 +63,7 @@ public abstract class Product implements Cloneable {
                 throw new IllegalArgumentException("Invalid product type: " + type);
         }
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,6 +78,7 @@ public abstract class Product implements Cloneable {
         if (getName() != null ? !getName().equals(product.getName()) : product.getName() != null) return false;
         return getExpirationDate() != null ? getExpirationDate().equals(product.getExpirationDate()) : product.getExpirationDate() == null;
     }
+
     @Override
     public int hashCode() {
         int result;
@@ -138,7 +141,7 @@ public abstract class Product implements Cloneable {
 
     public abstract boolean isSpoiled();
 
-    public abstract boolean checkExpiration();
+    public abstract boolean isFresh();
 
     @Override
     public Product clone() throws CloneNotSupportedException {

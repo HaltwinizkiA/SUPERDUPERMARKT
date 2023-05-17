@@ -42,7 +42,7 @@ public class Wein extends Product {
     }
 
     @Override
-    public boolean checkExpiration() {
+    public boolean isFresh() {
         return true;
     }
 }

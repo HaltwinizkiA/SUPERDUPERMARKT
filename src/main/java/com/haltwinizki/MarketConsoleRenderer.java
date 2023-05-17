@@ -1,8 +1,6 @@
 package com.haltwinizki;
 
 import com.haltwinizki.products.Product;
-import com.haltwinizki.products.Käse;
-import com.haltwinizki.products.Wein;
 import com.haltwinizki.service.ProductService;
 
 import java.text.ParseException;
@@ -13,13 +11,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MarketConsoleRenderer {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     private final ProductService productService;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
     public MarketConsoleRenderer(ProductService productService) {
+        scanner = new Scanner(System.in);
         this.productService = productService;
-
     }
 
     public boolean render() {
@@ -88,14 +86,14 @@ public class MarketConsoleRenderer {
         printProducts(productService.getAllProducts());
     }
 
-    public Product createProduct() {
+    private Product createProduct() {
 
         System.out.println("Wählen Sie bitte Product Art aus ");
         while (true) {
             String art = scanner.next();
             art=art.toUpperCase();
             try {
-                return Product.create(art, nameInput(), priceInput(), qualityInput(), expirationDateInput());
+                return Product.create(art, nameInput(), inputPrice(), qualityInput(), expirationDateInput());
             }catch (Exception e){
             System.out.println("Sie haben den falschen Art eingegeben");
         }
@@ -104,7 +102,7 @@ public class MarketConsoleRenderer {
 
     }
 
-    public Product updateProductMenu(Product product) {
+    private Product updateProductMenu(Product product) {
         boolean loop = true;
         while (loop) {
             System.out.println("1. Produktname");
@@ -119,7 +117,7 @@ public class MarketConsoleRenderer {
                     product.setName(nameInput());
                     break;
                 case 2:
-                    product.setPrice(priceInput());
+                    product.setPrice(inputPrice());
                     break;
                 case 3:
                     product.getQuality().set((qualityInput()));
@@ -138,22 +136,23 @@ public class MarketConsoleRenderer {
         return product;
     }
 
-    private String nameInput() {
+    private String nameInput() {//todo
         System.out.println("Geben Sie bitte name und drücken Sie ENTER");
         return scanner.next();
     }
 
-    private double priceInput() {
+    private double inputPrice() {//todo
         System.out.println("Geben Sie bitte price in format 12,99 und drücken Sie ENTER");
         while (true) {
             try {
                 double price=scanner.nextDouble();
                 if (price<0){
+                    System.out.println("Preis muss mehr als 0 sein");
                     continue;
                 }
                 return price;
             } catch (InputMismatchException e) {
-                scanner.nextLine();
+//                scanner.nextLine();
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
 
             }
@@ -161,13 +160,13 @@ public class MarketConsoleRenderer {
 
     }
 
-    private Date expirationDateInput() {
+    private Date expirationDateInput() {//todo
         Date expirationDate;
         System.out.println("Geben Sie bitte Verfallsdatum in format (dd.MM.yyyy) und drücken Sie ENTER");
         while (true) {
             try {
                 String line = scanner.nextLine();
-                expirationDate = dateFormat.parse(line);
+                expirationDate = DATE_FORMAT.parse(line);
                 break;
             } catch (ParseException e) {
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
@@ -182,18 +181,18 @@ public class MarketConsoleRenderer {
             try {
                 return scanner.nextInt();
             } catch (InputMismatchException e) {
-                scanner.nextLine();
+                scanner.nextLine();//todo
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
             }
         }
     }
 
-    public void printProducts(List<Product> productList) {
+    private void printProducts(List<Product> productList) {
         System.out.format("%12s %10s %27s %15s %12s %12s %12s %23s\n", "ART |", "ID |", "NAME |", "NORMALE PRICE |", "PRICE |", "QUALITY |", "Verfallsdatum |", "ZUSTAND |");
         for (Product product : productList) {
             String condition = "";
             System.out.format("%12s %4$6s %2$25s %3$12s %1$12s %1$12s %5$12s %6$12s \n", "-----------|", "--------------------------|", "--------------|", "---------|", "--------------|", "----------------------|");
-            if (!product.checkExpiration()) {
+            if (!product.isFresh()) {
                 condition = "abgelaufen ";
             } else {
                 condition = "gut";
@@ -201,7 +200,7 @@ public class MarketConsoleRenderer {
             String expirationDate;
             if (product.getExpirationDate() == null) {
                 expirationDate = "";
-            } else expirationDate = dateFormat.format(product.getExpirationDate());
+            } else expirationDate = DATE_FORMAT.format(product.getExpirationDate());
             System.out.format("%10.8s | %8s | %25.26s |%14s | %10.4s | %10s | %13s | %21s |\n", product.getClass().getSimpleName(), product.getId(), product.getName(), product.getPrice(), product.getDailyPrice(), product.getQuality(), expirationDate, condition);
         }
 

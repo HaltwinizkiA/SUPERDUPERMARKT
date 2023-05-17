@@ -1,6 +1,5 @@
 package com.haltwinizki.service.impl;
 
-import com.haltwinizki.local.LocaleProductsBase;
 import com.haltwinizki.products.Käse;
 import com.haltwinizki.products.Product;
 import com.haltwinizki.products.Wein;
@@ -8,8 +7,6 @@ import com.haltwinizki.products.Whiskey;
 import com.haltwinizki.repository.impl.LocalProductRepository;
 import com.haltwinizki.service.ProductService;
 
-import liquibase.pro.packaged.A;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -75,8 +72,8 @@ public class ProductServiceImplTest {
         Product product = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
         when(productRepository.create(product)).thenReturn(product);
         productService.create(product);
-        when(productRepository.delete(1)).thenReturn(product);
-        when(productRepository.delete(1)).thenReturn(product);
+        when(productRepository.remove(1)).thenReturn(product);
+        when(productRepository.remove(1)).thenReturn(product);
         Product removedProduct = productService.remove(1);
         assertNotNull(removedProduct);
         assertNull(productService.get(1));

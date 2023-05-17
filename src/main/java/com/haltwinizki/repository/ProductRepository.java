@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductRepository {
     List<Product> getAllProducts();
 
-    Product delete(long id);
+    Product remove(long id);
 
     Product update(Product productToUpdate);
 

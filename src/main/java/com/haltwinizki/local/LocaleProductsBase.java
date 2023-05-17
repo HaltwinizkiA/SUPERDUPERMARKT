@@ -20,11 +20,12 @@ public class LocaleProductsBase {
     }
 
     private AtomicLong maxId;
-    private List<Product> productsList;
+    private List<Product> productsList;//todo threadsafe
     private List<Product> discardedProducts;
 
     public LocaleProductsBase() {
         fileWorker = new FileWorker();
+        maxId=new AtomicLong(0);
         try {
             productsList = fileWorker.readProductsAusCSVReflection(PRODUCT_FILE_NAME);
             discardedProducts = fileWorker.readProductsAusCSVReflection(DISCARDED_PRODUCT_FILE_NAME);
@@ -32,7 +33,7 @@ public class LocaleProductsBase {
             System.out.println("Datenbank nicht geladen");
             log.info("Datenbank nicht geladen", e);
         }
-        checkMaxId();
+        initMaxId();
     }
 
     public static LocaleProductsBase getInstance() {
@@ -46,7 +47,7 @@ public class LocaleProductsBase {
         return instance;
     }
 
-    private void checkMaxId() {
+    private void initMaxId() {
         this.maxId = new AtomicLong();
         productsList.stream().map(Product::getId).max(Long::compareTo).ifPresent(maxId::set);
     }

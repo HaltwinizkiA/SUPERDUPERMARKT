@@ -32,7 +32,7 @@ public class Käse extends Product {
     }
 
     @Override
-    public boolean checkExpiration() {
+    public boolean isFresh() {
         return new Date().before(this.getExpirationDate()) && !this.isSpoiled();
     }
 }

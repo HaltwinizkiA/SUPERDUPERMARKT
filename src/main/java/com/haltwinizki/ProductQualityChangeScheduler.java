@@ -11,7 +11,6 @@ import java.util.Date;
 
 public class ProductQualityChangeScheduler {
     private static final Logger log = Logger.getLogger(FileWorker.class);
-
     private static final String FILENAME = "src/main/resources/logQualityChange.csv";
     private static final int TIMEOUT = 86400000;// ein Tag in Milisekunden
     private final FileWorker fileWorker = new FileWorker();
@@ -39,7 +38,7 @@ public class ProductQualityChangeScheduler {
                     try {
                         Thread.sleep(TIMEOUT);
                     } catch (InterruptedException e) {
-                        log.info(e);
+                        log.error(e);
                     }
                 }
             }

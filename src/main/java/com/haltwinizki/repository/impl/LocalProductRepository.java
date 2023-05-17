@@ -20,7 +20,7 @@ public class LocalProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product delete(long id) {
+    public Product remove(long id) {
         Product removedProduct = get(id);
         localeProductsBase.getProductsList().removeIf(product -> Objects.equals(id, product.getId()));
         localeProductsBase.save();
@@ -30,10 +30,11 @@ public class LocalProductRepository implements ProductRepository {
     @Override
     public Product update(Product updatedProduct) {
         Product productInDb = localeProductsBase.getProductsList().stream().filter(product -> product.getId() == updatedProduct.getId()).findFirst().orElse(null);
+        //todo null
         if (productInDb.getQuality() != updatedProduct.getQuality()) {
             productInDb.getQuality().set(updatedProduct.getQuality().get());
         }
-        if (updatedProduct.getExpirationDate() != null && !productInDb.getExpirationDate().equals(updatedProduct.getExpirationDate())) {
+        if (updatedProduct.getExpirationDate() != null && !updatedProduct.getExpirationDate().equals(productInDb.getExpirationDate())) {
             productInDb.setExpirationDate(updatedProduct.getExpirationDate());
         }
         if (!productInDb.getName().equals(updatedProduct.getName())) {
@@ -43,7 +44,7 @@ public class LocalProductRepository implements ProductRepository {
             productInDb.setPrice(updatedProduct.getPrice());
         }
         localeProductsBase.save();
-        return get(updatedProduct.getId());
+        return productInDb;
     }
 
     @Override
