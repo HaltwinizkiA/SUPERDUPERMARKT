@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class Product implements Cloneable {
 
     @CsvProperty(columnNumber = 4)
-    private final AtomicInteger quality;
+    private AtomicInteger quality;
     @CsvProperty(columnNumber = 1)
     private long id;
     @CsvProperty(columnNumber = 2)

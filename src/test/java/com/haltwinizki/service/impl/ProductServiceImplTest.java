@@ -6,12 +6,12 @@ import com.haltwinizki.products.Wein;
 import com.haltwinizki.products.Whiskey;
 import com.haltwinizki.repository.impl.LocalProductRepository;
 import com.haltwinizki.service.ProductService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,10 +21,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-
+@ExtendWith(MockitoExtension.class)
 public class ProductServiceImplTest {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    @InjectMocks
+   @InjectMocks
     private static final ProductService productService = new ProductServiceImpl();
     private static Date date1;
     private static Date date2;
@@ -32,19 +32,13 @@ public class ProductServiceImplTest {
     private LocalProductRepository productRepository;
 
     @BeforeEach
-    public  void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public void setUp() {
         try {
             date1 = dateFormat.parse("20.07.2023");
-
             date2 = dateFormat.parse("01.05.2023");
         } catch (ParseException e) {
             System.out.println(e);
         }
-    }
-
-    @BeforeEach
-    public void clearBase() {
     }
 
     @Test
@@ -60,11 +54,17 @@ public class ProductServiceImplTest {
     @Test
     public void testGet() {
         Product product = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
+        Product productWithNullField = new Wein(0, null, 0, 0, null, 0);
         when(productRepository.read(1)).thenReturn(product);
-        productService.create(product);
-        Product retrievedProduct = productService.read(1);
-        assertNotNull(retrievedProduct);
-        assertEquals(product, retrievedProduct);
+        when(productRepository.read(0)).thenReturn(productWithNullField);
+        when(productRepository.read(1234)).thenReturn(null);
+
+        assertNull(productService.read(1234));
+        Product retrievedProduct0 = productService.read(0);
+        Product retrievedProduct1 = productService.read(1);
+        assertNotNull(retrievedProduct1);
+        assertEquals(productWithNullField, retrievedProduct0);
+        assertEquals(product, retrievedProduct1);
     }
 
     @Test
@@ -80,6 +80,7 @@ public class ProductServiceImplTest {
         assertEquals(product, removedProduct);
 //        assertTrue(productService.getDiscardedProducts().add().contains(removedProduct));
     }
+
     @Test
     public void testUpdate() {
 
@@ -102,7 +103,7 @@ public class ProductServiceImplTest {
         Product product2 = new Käse(1, "Emmental", 9.66, 40, date1, 0);
         when(productRepository.create(product1)).thenReturn(product1);
         when(productRepository.create(product2)).thenReturn(product2);
-        List<Product> productList=new ArrayList<>();
+        List<Product> productList = new ArrayList<>();
         productList.add(productService.create(product1));
         productList.add(productService.create(product2));
         when(productRepository.getAllProducts()).thenReturn(productList);
@@ -118,14 +119,16 @@ public class ProductServiceImplTest {
         Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 9);
         Product product2 = new Käse(2, "Emmental", 9.66, 40, date1, 0);
         Product product3 = new Wein(3, "Deutsche rot", 5.66, 10, null, 8);
-        Product product4=new Whiskey(3, "Jack Daniels", 9.66, 20, null, 24);
+        Product product4 = new Whiskey(3, "Jack Daniels", 9.66, 20, null, 29);
 
         product1.changeQuality();
         product2.changeQuality();
         product3.changeQuality();
+        product4.changeQuality();
+
         assertEquals(11, product1.getQuality().get()); // Assuming qualityChange() method reduces quality by 1
         assertEquals(39, product2.getQuality().get());
         assertEquals(10, product3.getQuality().get());
-        assertEquals(0, product4.getQuality().get());
+        assertEquals(21, product4.getQuality().get());
     }
 }
