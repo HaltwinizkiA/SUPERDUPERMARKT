@@ -7,13 +7,13 @@ import java.util.List;
 public interface ProductRepository {
     List<Product> getAllProducts();
 
-    Product remove(long id);
+    Product delete(long id);
 
     Product update(Product productToUpdate);
 
     Product create(Product product);
 
-    Product get(long id);
+    Product read(long id);
 
     List<Product> getDiscardedProducts();
 }

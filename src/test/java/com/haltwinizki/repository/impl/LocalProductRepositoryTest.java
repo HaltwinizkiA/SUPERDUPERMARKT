@@ -68,7 +68,7 @@ class LocalProductRepositoryTest {
 //        when(localeProductsBase.getProductsList()).thenReturn(new ArrayList<>(List.of(new Product(1, "Product 1", 10.0), expectedProduct, new Product(3, "Product 3", 30.0))));
 
         // Act
-        Product removedProduct = productRepository.remove(id);
+        Product removedProduct = productRepository.delete(id);
 
         // Assert
         assertEquals(expectedProduct, removedProduct);

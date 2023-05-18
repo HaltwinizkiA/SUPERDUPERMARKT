@@ -7,6 +7,7 @@ public class Käse extends Product {
 
     public Käse() {
     }
+
     public Käse(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
         super(id, name, price, quality, expirationDate, dayCounter);
     }
@@ -16,7 +17,7 @@ public class Käse extends Product {
     }
 
     @Override
-    public Käse clone() throws CloneNotSupportedException {
+    public Käse clone() {
         return (Käse) super.clone();
     }
 

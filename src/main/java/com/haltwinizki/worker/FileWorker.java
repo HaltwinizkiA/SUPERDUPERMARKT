@@ -2,12 +2,12 @@ package com.haltwinizki.worker;
 
 
 import com.haltwinizki.annotation.CsvProperty;
+import com.haltwinizki.products.Käse;
 import com.haltwinizki.products.Product;
+import com.haltwinizki.products.Wein;
 import com.haltwinizki.products.Whiskey;
 import liquibase.util.csv.CSVReader;
 import liquibase.util.csv.CSVWriter;
-import com.haltwinizki.products.Käse;
-import com.haltwinizki.products.Wein;
 import org.apache.log4j.Logger;
 
 import java.io.FileReader;
@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileWorker {
@@ -46,8 +45,8 @@ public class FileWorker {
         return DATE_FORMAT;
     }
 
-    public CopyOnWriteArrayList <Product> readProductsAusCSVReflection(String fileName) throws Exception {
-        CopyOnWriteArrayList <Product> productList = new CopyOnWriteArrayList <>();
+    public List<Product> readProductsAusCSVReflection(String fileName) throws Exception {
+        List<Product> productList = new ArrayList<>();
         try (CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
             List<String[]> rows = csvReader.readAll();
             for (int i = 1; i < rows.size(); i++) {
@@ -147,7 +146,6 @@ public class FileWorker {
             log.error(e);
             return false;
         }
-
     }
 
     public List<String[]> getQualityChangeLogs(String fileName) {
@@ -157,7 +155,6 @@ public class FileWorker {
             log.error("mit Quality Logging sind Probleme aufgetreten " + ex);
             return null;//todo
         }
-
     }
 
     public Date getLastLog(String fileName) {

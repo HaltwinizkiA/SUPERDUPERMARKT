@@ -18,7 +18,7 @@ public class Wein extends Product {
     }
 
     @Override
-    public Wein clone() throws CloneNotSupportedException {
+    public Wein clone() {
         return (Wein) super.clone();
     }
 

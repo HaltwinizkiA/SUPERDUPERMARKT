@@ -60,9 +60,9 @@ public class ProductServiceImplTest {
     @Test
     public void testGet() {
         Product product = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
-        when(productRepository.get(1)).thenReturn(product);
+        when(productRepository.read(1)).thenReturn(product);
         productService.create(product);
-        Product retrievedProduct = productService.get(1);
+        Product retrievedProduct = productService.read(1);
         assertNotNull(retrievedProduct);
         assertEquals(product, retrievedProduct);
     }
@@ -72,11 +72,11 @@ public class ProductServiceImplTest {
         Product product = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
         when(productRepository.create(product)).thenReturn(product);
         productService.create(product);
-        when(productRepository.remove(1)).thenReturn(product);
-        when(productRepository.remove(1)).thenReturn(product);
-        Product removedProduct = productService.remove(1);
+        when(productRepository.delete(1)).thenReturn(product);
+        when(productRepository.delete(1)).thenReturn(product);
+        Product removedProduct = productService.delete(1);
         assertNotNull(removedProduct);
-        assertNull(productService.get(1));
+        assertNull(productService.read(1));
         assertEquals(product, removedProduct);
 //        assertTrue(productService.getDiscardedProducts().add().contains(removedProduct));
     }

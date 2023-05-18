@@ -4,7 +4,6 @@ import com.haltwinizki.products.Product;
 import com.haltwinizki.worker.FileWorker;
 import org.apache.log4j.Logger;
 
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
@@ -15,24 +14,18 @@ public class LocaleProductsBase {
     private static final Logger log = Logger.getLogger(LocaleProductsBase.class);
     private static LocaleProductsBase instance;
     private final FileWorker fileWorker;
-
-    public AtomicLong getMaxId() {
-        return maxId;
-    }
-
     private AtomicLong maxId;
     private CopyOnWriteArrayList<Product> productsList;
-    private CopyOnWriteArrayList <Product> discardedProducts;
-
+    private CopyOnWriteArrayList<Product> discardedProducts;
     public LocaleProductsBase() {
         fileWorker = new FileWorker();
-        maxId=new AtomicLong(0);
+        maxId = new AtomicLong(0);
         try {
-            productsList = fileWorker.readProductsAusCSVReflection(PRODUCT_FILE_NAME);
-            discardedProducts = fileWorker.readProductsAusCSVReflection(DISCARDED_PRODUCT_FILE_NAME);
+            productsList = new CopyOnWriteArrayList<>(fileWorker.readProductsAusCSVReflection(PRODUCT_FILE_NAME));
+            discardedProducts = new CopyOnWriteArrayList<>(fileWorker.readProductsAusCSVReflection(DISCARDED_PRODUCT_FILE_NAME));
         } catch (Exception e) {
             System.out.println("Datenbank nicht geladen");
-            log.info("Datenbank nicht geladen", e);
+            log.error("Datenbank nicht geladen", e);
         }
         initMaxId();
     }
@@ -46,6 +39,10 @@ public class LocaleProductsBase {
             }
         }
         return instance;
+    }
+
+    public AtomicLong getMaxId() {
+        return maxId;
     }
 
     private void initMaxId() {
@@ -63,7 +60,7 @@ public class LocaleProductsBase {
             fileWorker.writeProductsInCSVReflection(DISCARDED_PRODUCT_FILE_NAME, discardedProducts);
         } catch (IllegalAccessException e) {
             System.out.println("Datenbank nicht gespeichert");
-            log.info("Datenbank nicht gespeichert", e);
+            log.error("Datenbank nicht gespeichert", e);
         }
     }
 

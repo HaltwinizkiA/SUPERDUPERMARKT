@@ -16,13 +16,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product get(long id) {
-        return productRepository.get(id);
+    public Product read(long id) {
+        return productRepository.read(id);
     }
 
     @Override
-    public Product remove(long id) {
-        return productRepository.remove(id);
+    public Product delete(long id) {
+        return productRepository.delete(id);
     }
 
     @Override

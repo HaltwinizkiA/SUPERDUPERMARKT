@@ -17,22 +17,14 @@ public class ProductQualityChangeScheduler {
     private Thread thread;
 
     public void schedulerStart(ProductService service) {
-        Runnable task = new Runnable() {//todo etwas andres für
-            @Override
-            public void run() {
-                service.changeQuality();
-                System.out.println("\n Qualität wurde geändert");
-            }
-        };
-
-        thread = new Thread(new Runnable() {
+            thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     Date date = new Date();
                     Date lastLogDate = fileWorker.getLastLog(FILENAME);
                     if (!fileWorker.getDATE_FORMAT().format(date).equals(fileWorker.getDATE_FORMAT().format(lastLogDate))) {
-                        task.run();
+                        service.changeQuality();
                         fileWorker.qualityChangeLog(FILENAME);
                     }
                     try {

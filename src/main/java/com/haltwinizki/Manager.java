@@ -15,12 +15,10 @@ public class Manager {
     private final MarketConsoleRenderer marketConsoleRenderer = new MarketConsoleRenderer(productService);
 
     public void start() {
-
         ProductQualityChangeScheduler dailyProductQualityChangeScheduler = new ProductQualityChangeScheduler();
         dailyProductQualityChangeScheduler.schedulerStart(productService);
         marketConsoleRenderer.render();
         dailyProductQualityChangeScheduler.schedulerStop();
-
     }
 
 

@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class LocalProductRepository implements ProductRepository {
-    private static final Logger log = Logger.getLogger(FileWorker.class);
-
-    private LocaleProductsBase localeProductsBase = LocaleProductsBase.getInstance();
+    private final LocaleProductsBase localeProductsBase = LocaleProductsBase.getInstance();
 
     @Override
     public List<Product> getAllProducts() {
@@ -20,8 +18,8 @@ public class LocalProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product remove(long id) {
-        Product removedProduct = get(id);
+    public Product delete(long id) {
+        Product removedProduct = read(id);
         localeProductsBase.getProductsList().removeIf(product -> Objects.equals(id, product.getId()));
         localeProductsBase.getDiscardedProducts().add(removedProduct);
         localeProductsBase.save();
@@ -31,14 +29,16 @@ public class LocalProductRepository implements ProductRepository {
     @Override
     public Product update(Product updatedProduct) {
         Product productInDb = localeProductsBase.getProductsList().stream().filter(product -> product.getId() == updatedProduct.getId()).findFirst().orElse(null);
-        //todo null
-        if (productInDb.getQuality() != updatedProduct.getQuality()) {
+        if (productInDb == null) {
+            return null;
+        }
+        if (updatedProduct.getQuality() != null && productInDb.getQuality() != updatedProduct.getQuality()) {
             productInDb.getQuality().set(updatedProduct.getQuality().get());
         }
         if (updatedProduct.getExpirationDate() != null && !updatedProduct.getExpirationDate().equals(productInDb.getExpirationDate())) {
             productInDb.setExpirationDate(updatedProduct.getExpirationDate());
         }
-        if (!productInDb.getName().equals(updatedProduct.getName())) {
+        if (updatedProduct.getName() != null && !productInDb.getName().equals(updatedProduct.getName())) {
             productInDb.setName(updatedProduct.getName());
         }
         if (productInDb.getPrice() != updatedProduct.getPrice()) {
@@ -56,14 +56,9 @@ public class LocalProductRepository implements ProductRepository {
         return product;
     }
 
-
     @Override
-    public Product get(long id) {
-        try {
-            return localeProductsBase.getProductsList().stream().filter(product -> product.getId() == id).findFirst().orElse(null).clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
+    public Product read(long id) {
+        return localeProductsBase.getProductsList().stream().filter(product -> product.getId() == id).findFirst().map(Product::clone).orElse(null);
     }
 
     @Override

@@ -7,20 +7,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Product implements Cloneable {
 
+    @CsvProperty(columnNumber = 4)
+    private final AtomicInteger quality;
     @CsvProperty(columnNumber = 1)
     private long id;
     @CsvProperty(columnNumber = 2)
     private String name;
     @CsvProperty(columnNumber = 3)
     private double price;
-    @CsvProperty(columnNumber = 4)
-    private AtomicInteger quality;
     @CsvProperty(columnNumber = 5)
     private Date expirationDate;
     @CsvProperty(columnNumber = 6)
     private AtomicInteger dayCounter;// Ich habe diese Eigenschaft hinzugefügt, um die Qualitätsänderung zu verfolgen
 
     public Product() {
+        this.quality = new AtomicInteger();
     }
 
     public Product(long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
@@ -37,31 +38,6 @@ public abstract class Product implements Cloneable {
         this.name = name;
         this.quality = new AtomicInteger(quality);
         this.expirationDate = expirationDate;
-    }
-
-    public static Product create(String type, long id, String name, double price, int quality, Date expirationDate, int dayCounter) {
-        switch (type) {
-            case "Wein":
-                return new Wein(id, name, price, quality, expirationDate, dayCounter);
-            case "Käse":
-                return new Käse(id, name, price, quality, expirationDate, dayCounter);
-            default:
-                throw new IllegalArgumentException("Invalid product type: " + type);
-        }
-    }
-
-    public static Product create(String type, String name, double price, int quality, Date expirationDate) {
-
-        switch (type) {
-            case "WEIN":
-                return new Wein(name, price, quality, expirationDate, 10);
-            case "KÄSE":
-                return new Käse(name, price, quality, expirationDate);
-            case "WHISKEY":
-                return new Whiskey(name, price, quality, expirationDate);
-            default:
-                throw new IllegalArgumentException("Invalid product type: " + type);
-        }
     }
 
     @Override
@@ -144,7 +120,11 @@ public abstract class Product implements Cloneable {
     public abstract boolean isFresh();
 
     @Override
-    public Product clone() throws CloneNotSupportedException {
-        return (Product) super.clone();
+    public Product clone() {
+        try {
+            return (Product) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 }

@@ -7,9 +7,9 @@ import java.util.List;
 public interface ProductService {
     Product create(Product productInfoDto);
 
-    Product get(long id);
+    Product read(long id);
 
-    Product remove(long id);
+    Product delete(long id);
 
     Product update(Product product);
 
@@ -18,6 +18,4 @@ public interface ProductService {
     List<Product> getDiscardedProducts();
 
     void changeQuality();
-
-
 }

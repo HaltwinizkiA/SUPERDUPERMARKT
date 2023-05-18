@@ -1,5 +1,6 @@
 package com.haltwinizki;
 
+import com.haltwinizki.factory.ProductFactory;
 import com.haltwinizki.products.Product;
 import com.haltwinizki.service.ProductService;
 
@@ -50,10 +51,8 @@ public class MarketConsoleRenderer {
                     break;
                 default:
                     System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
-
             }
         }
-
     }
 
     private void discardedProducts() {
@@ -63,7 +62,7 @@ public class MarketConsoleRenderer {
     private void updateProduct() {
         System.out.println("Geben Sie bitte die Produkt-ID ein");
         long id = scanner.nextLong();
-        Product product = productService.get(id);
+        Product product = productService.read(id);
         if (product == null) {
             System.out.println("Produkt mit dieser ID existiert nicht");
             return;
@@ -74,10 +73,9 @@ public class MarketConsoleRenderer {
     private void removeProduct() {
         System.out.println("Geben Sie bitte die Produkt-ID ein");
         long id = scanner.nextLong();
-        if (productService.remove(id) == null) {
+        if (productService.delete(id) == null) {
             System.out.println("Produkt mit dieser ID existiert nicht");
         }
-
     }
 
     private void addProduct() {
@@ -88,35 +86,26 @@ public class MarketConsoleRenderer {
         printProducts(productService.getAllProducts());
     }
 
-    private Product createProduct() {//todo problem with art
-
-        System.out.println("Wählen Sie bitte Product Art aus ");
+    private Product createProduct() {
+        System.out.println("Wählen Sie bitte Product ART aus ");
         while (true) {
             String art = scanner.next();
-            art=art.toUpperCase();
+            art = art.toUpperCase();
             try {
-                Product product= Product.create(art, inputName(), inputPrice(), inputQuality(), inputExpirationDate());
+                Product product = ProductFactory.createProduct(art);
+                product.setName(inputName());
+                product.setPrice(inputPrice());
+                product.setExpirationDate(inputExpirationDate());
+                product.getQuality().set(inputQuality());
                 return product;
-            }catch (Exception e){
-            System.out.println("Sie haben den falschen Art eingegeben");
-            continue;
-        }
-
-        }
-
-    }
-
-    private String inputArt(){
-        while (true) {
-            String art = scanner.next();
-            art=art.toUpperCase();
-
+            } catch (IllegalArgumentException e) {
+                System.out.println("Ungültiger ART, bitte versuchen Sie es erneut.");
+            }
         }
     }
 
     private Product updateProductMenu(Product product) {
-        boolean loop = true;
-        while (loop) {
+        while (true) {
             System.out.println("1. Produktname");
             System.out.println("2. Produktpreis");
             System.out.println("3. Produktqualität");
@@ -138,53 +127,45 @@ public class MarketConsoleRenderer {
                     product.setExpirationDate(inputExpirationDate());
                     break;
                 case 5:
-                    loop = false;
-                    break;
+                    return product;
                 default:
                     System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
-
             }
         }
-        return product;
     }
 
-    private String inputName() {//todo
+    private String inputName() {
         System.out.println("Geben Sie bitte name und drücken Sie ENTER");
         return scanner.next();
     }
 
-    private double inputPrice() {//todo
+    private double inputPrice() {
         System.out.println("Geben Sie bitte price in format 12,99 und drücken Sie ENTER");
         while (true) {
             try {
-                double price=scanner.nextDouble();
-                if (price<0){
-                    System.out.println("Preis muss mehr als 0 sein");
+                double price = scanner.nextDouble();
+                if (price <= 0) {
+                    System.out.println("Der Preis muss größer als 0 sein");
                     continue;
                 }
                 return price;
             } catch (InputMismatchException e) {
-//                scanner.nextLine();
+                scanner.nextLine();// clear buffer
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
-
             }
         }
-
     }
 
-    private Date inputExpirationDate() {//todo
-        Date expirationDate;
+    private Date inputExpirationDate() {
         System.out.println("Geben Sie bitte Verfallsdatum in format (dd.MM.yyyy) und drücken Sie ENTER");
         while (true) {
             try {
-                String line = scanner.nextLine();
-                expirationDate = DATE_FORMAT.parse(line);
-                break;
+                return DATE_FORMAT.parse(scanner.nextLine());
             } catch (ParseException e) {
+                scanner.nextLine();// clear buffer
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
             }
         }
-        return expirationDate;
     }
 
     private int inputQuality() {
@@ -193,7 +174,7 @@ public class MarketConsoleRenderer {
             try {
                 return scanner.nextInt();
             } catch (InputMismatchException e) {
-                scanner.nextLine();//todo
+                scanner.nextLine();// clear buffer
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
             }
         }
@@ -215,6 +196,5 @@ public class MarketConsoleRenderer {
             } else expirationDate = DATE_FORMAT.format(product.getExpirationDate());
             System.out.format("%10.8s | %8s | %25.26s |%14s | %10.4s | %10s | %13s | %21s |\n", product.getClass().getSimpleName(), product.getId(), product.getName(), product.getPrice(), product.getDailyPrice(), product.getQuality(), expirationDate, condition);
         }
-
     }
 }

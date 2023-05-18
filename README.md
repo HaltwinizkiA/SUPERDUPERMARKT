@@ -6,14 +6,21 @@ Punkt
 * Begründe deine Wahl verwendeter Design Patterns
 
 Singlton für LocaleProductsBase. 
-Dies ist eine Datenbanksimulation. Sie muss einzigartige sein und Multi Thread, deshalb habe ich 
-eine threadsafe singltone benuzt.Für thread Sichercheit habe ich auch CopyOnWriteArrayList benutzt.
+Dies ist eine Datenbanksimulation. Sie muss einzigartige und Multi Thread sein, deshalb habe ich 
+eine threadsafe singltone benuzt. Für thread Sichercheit habe ich auch CopyOnWriteArrayList benutzt.
 
 Variablen die mehr Thread benutzt könnnen, habe ich als
 Atomic erstellt.
-Zuerst hate ich Fabric method für die Product Erstellung in Console, 
-der habe ich auch für Date load benutzt. Weiter habe ich mich für Reflection entschieden.
-damit save and load mehr mastabierte sein.
+Factory zur Produkterstellung in Console Render.
+
+DiscaredProducts.csv- Geschichte der ausrangierten Produkte.
+
+logQualityChange.csv- Geschichte des Qualitätswandels.
+
+Reflection für Daten aus csv load, damit save and load mehr mastabierte sein.
+(Verwaltung einfach durch Annotation)
+
+
 
 __________________________________________________________________
 * Erstelle ein Modul für einen neuen Produkttypen (gestalte das Produkt und die
