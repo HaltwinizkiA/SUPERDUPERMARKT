@@ -1,14 +1,12 @@
-package com.haltwinizki;
-
+package com.haltwinizki.scheduler;
 
 import com.haltwinizki.service.ProductService;
 import com.haltwinizki.worker.FileWorker;
 import org.apache.log4j.Logger;
 
-
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
-
-
 public class ProductQualityChangeScheduler {
     private static final Logger log = Logger.getLogger(FileWorker.class);
     private static final String FILENAME = "src/main/resources/logQualityChange.csv";
@@ -21,12 +19,27 @@ public class ProductQualityChangeScheduler {
             @Override
             public void run() {
                 while (true) {
+                    //todo check on null
                     Date date = new Date();
-                    Date lastLogDate = fileWorker.getLastLog(FILENAME);
-                    if (!fileWorker.getDATE_FORMAT().format(date).equals(fileWorker.getDATE_FORMAT().format(lastLogDate))) {
-                        service.changeQuality();
-                        fileWorker.qualityChangeLog(FILENAME);
+                    Date lastLogDate = null;
+                    if (service==null){
+                        break;
                     }
+                    try {
+                        lastLogDate = fileWorker.getLastLog(FILENAME);
+                    } catch (ParseException|IOException e) {
+                        log.error(e);
+                    }
+
+                    if (!fileWorker.getDateFormat().format(date).equals(fileWorker.getDateFormat().format(lastLogDate))) {
+                        service.changeQuality();
+                        try {
+                            fileWorker.changeQualityLog(FILENAME);
+                        } catch (IOException e) {
+                            log.error(e);
+                        }
+                    }
+
                     try {
                         Thread.sleep(TIMEOUT);
                     } catch (InterruptedException e) {
@@ -41,8 +54,6 @@ public class ProductQualityChangeScheduler {
     public void schedulerStop() {
         thread.stop();
     }
-
-
 }
 
 

@@ -2,6 +2,7 @@ package com.haltwinizki.products;
 
 import com.haltwinizki.annotation.CsvProperty;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -118,6 +119,20 @@ public abstract class Product implements Cloneable {
     public abstract boolean isSpoiled();
 
     public abstract boolean isFresh();
+
+    public String toString(SimpleDateFormat dateFormat) {
+        String condition = "";
+        if (!this.isFresh()) {
+            condition = "abgelaufen ";
+        } else {
+            condition = "gut";
+        }
+        String expirationDate;
+        if (this.getExpirationDate() == null) {
+            expirationDate = "";
+        } else expirationDate = dateFormat.format(this.getExpirationDate());
+        return String.format("%10.8s | %8s | %25.26s |%14s | %10.4s | %10s | %13s | %21s |\n", this.getClass().getSimpleName(), this.getId(), this.getName(), this.getPrice(), this.getDailyPrice(), this.getQuality(), expirationDate, condition);
+    }
 
     @Override
     public Product clone() {

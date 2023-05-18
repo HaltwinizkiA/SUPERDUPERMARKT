@@ -27,7 +27,11 @@ public class LocalProductRepository implements ProductRepository {
 
     @Override
     public Product update(Product updatedProduct) {
-        Product productInDb = LocaleProductsBase.getInstance().getProductsList().stream().filter(product -> product.getId() == updatedProduct.getId()).findFirst().orElse(null);
+        if (updatedProduct == null) {
+            return null;
+        }
+        Product productInDb = LocaleProductsBase.getInstance().getProductsList().stream()
+                .filter(product -> product.getId() == updatedProduct.getId()).findFirst().orElse(null);
         if (productInDb == null) {
             return null;
         }
@@ -37,7 +41,7 @@ public class LocalProductRepository implements ProductRepository {
         if (updatedProduct.getExpirationDate() != null && !updatedProduct.getExpirationDate().equals(productInDb.getExpirationDate())) {
             productInDb.setExpirationDate(updatedProduct.getExpirationDate());
         }
-        if (updatedProduct.getName() != null && !productInDb.getName().equals(updatedProduct.getName())) {
+        if (updatedProduct.getName() != null && !updatedProduct.getName().equals(productInDb.getName())) {
             productInDb.setName(updatedProduct.getName());
         }
         if (productInDb.getPrice() != updatedProduct.getPrice()) {

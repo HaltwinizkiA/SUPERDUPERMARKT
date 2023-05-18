@@ -46,7 +46,6 @@ public class LocaleProductsBase {
     }
 
     private void initMaxId() {
-        this.maxId = new AtomicLong();
         productsList.stream().map(Product::getId).max(Long::compareTo).ifPresent(maxId::set);
     }
 

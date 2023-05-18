@@ -25,23 +25,24 @@ public class FileWorker {
     private static final Logger log = Logger.getLogger(FileWorker.class);
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     private final String head = "ART,ID,NAME,PRICE,QUALITY,EXPIRATION DATE(dd.MM.yyyy),DAY COUNTER";
+    private final int fieldCount = 7;
 
     private Class getTypeBySimpleName(String s) {
         switch (s) {
-            case "Wein":
+            case "WEIN":
                 return Wein.class;
-            case "Käse":
+            case "KÄSE":
                 return Käse.class;
-            case "Whiskey":
+            case "WHISKEY":
                 return Whiskey.class;
             default:
                 log.error("Invalid product type: " + s);
-                return null;//todo throw castom exception
+                return null;
         }
 
     }
 
-    public SimpleDateFormat getDATE_FORMAT() {
+    public SimpleDateFormat getDateFormat() {
         return DATE_FORMAT;
     }
 
@@ -50,10 +51,15 @@ public class FileWorker {
         try (CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
             List<String[]> rows = csvReader.readAll();
             for (int i = 1; i < rows.size(); i++) {
-                if (rows.get(i).length < 7) {
+                if (rows.get(i) == null || rows.get(i).length < fieldCount) {
                     continue;
                 }
-                Product product = (Product) getTypeBySimpleName(rows.get(i)[0]).newInstance();
+                Class type = getTypeBySimpleName(rows.get(i)[0].toUpperCase());
+
+                if (type == null || !(Wein.class.getSuperclass() == Product.class)) {
+                    continue;
+                }
+                Product product = (Product) type.newInstance();
                 Field[] fields = product.getClass().getSuperclass().getDeclaredFields();
                 setProductFields(product, fields, rows.get(i));
                 productList.add(product);
@@ -123,7 +129,7 @@ public class FileWorker {
             return Integer.parseInt(value);
         } else if (fieldType == long.class || fieldType == Long.class) {
             return Long.parseLong(value);
-        } else if (fieldType == AtomicInteger.class || fieldType == AtomicInteger.class) {
+        } else if (fieldType == AtomicInteger.class) {
             return new AtomicInteger(Integer.parseInt(value));
         } else if (fieldType == double.class || fieldType == Double.class) {
             return Double.parseDouble(value);
@@ -136,37 +142,27 @@ public class FileWorker {
         }
     }
 
-    public boolean qualityChangeLog(String fileName) {
+    public void changeQualityLog(String fileName) throws IOException {
         List<String[]> rows = getQualityChangeLogs(fileName);
         try (CSVWriter cw = new CSVWriter(new FileWriter(fileName))) {
             rows.add(new String[]{DATE_FORMAT.format(new Date())});
             cw.writeAll(rows);
-            return true;
-        } catch (IOException e) {
-            log.error(e);
-            return false;
         }
     }
 
-    public List<String[]> getQualityChangeLogs(String fileName) {
+    public List<String[]> getQualityChangeLogs(String fileName) throws IOException {
         try (CSVReader csvR = new CSVReader(new FileReader(fileName))) {
             return csvR.readAll();
-        } catch (IOException ex) {
-            log.error("mit Quality Logging sind Probleme aufgetreten " + ex);
-            return null;//todo
         }
     }
 
-    public Date getLastLog(String fileName) {
+    public Date getLastLog(String fileName) throws IOException, ParseException {
         try (CSVReader br = new CSVReader(new FileReader(fileName))) {
             List<String[]> rows = br.readAll();
             String lastLog = rows.get(rows.size() - 1)[0];
             return DATE_FORMAT.parse(lastLog);
-
-        } catch (ParseException | IOException ex) {
-            log.error("mit Quality Logging sind Probleme aufgetreten " + ex);
-            return null;//todo
         }
+
     }
 
 }

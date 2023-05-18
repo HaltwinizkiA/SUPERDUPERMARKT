@@ -109,6 +109,7 @@ public class ProductServiceImplTest {
         when(productRepository.getAllProducts()).thenReturn(productList);
         List<Product> allProducts = productService.getAllProducts();
         assertNotNull(allProducts);
+
         assertEquals(2, allProducts.size());
         assertTrue(allProducts.contains(product1));
         assertTrue(allProducts.contains(product2));

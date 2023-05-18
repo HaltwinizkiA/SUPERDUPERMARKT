@@ -48,7 +48,7 @@ public class MarketConsoleRenderer {
                     discardedProducts();
                     continue;
                 case 6:
-                    break;
+                    return;
                 default:
                     System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
             }
@@ -79,14 +79,14 @@ public class MarketConsoleRenderer {
     }
 
     private void addProduct() {
-        productService.create(createProduct());
+        productService.create(createProductMenu());
     }
 
     private void dailyOverview() {
         printProducts(productService.getAllProducts());
     }
 
-    private Product createProduct() {
+    private Product createProductMenu() {
         System.out.println("Wählen Sie bitte Product ART aus ");
         while (true) {
             String art = scanner.next();
@@ -183,18 +183,8 @@ public class MarketConsoleRenderer {
     private void printProducts(List<Product> productList) {
         System.out.format("%12s %10s %27s %15s %12s %12s %12s %23s\n", "ART |", "ID |", "NAME |", "NORMALE PRICE |", "PRICE |", "QUALITY |", "Verfallsdatum |", "ZUSTAND |");
         for (Product product : productList) {
-            String condition = "";
             System.out.format("%12s %4$6s %2$25s %3$12s %1$12s %1$12s %5$12s %6$12s \n", "-----------|", "--------------------------|", "--------------|", "---------|", "--------------|", "----------------------|");
-            if (!product.isFresh()) {
-                condition = "abgelaufen ";
-            } else {
-                condition = "gut";
-            }
-            String expirationDate;
-            if (product.getExpirationDate() == null) {
-                expirationDate = "";
-            } else expirationDate = DATE_FORMAT.format(product.getExpirationDate());
-            System.out.format("%10.8s | %8s | %25.26s |%14s | %10.4s | %10s | %13s | %21s |\n", product.getClass().getSimpleName(), product.getId(), product.getName(), product.getPrice(), product.getDailyPrice(), product.getQuality(), expirationDate, condition);
+            System.out.format(product.toString(DATE_FORMAT));
         }
     }
 }
