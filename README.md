@@ -35,3 +35,6 @@ Ich habe selbe Whiskey hinzufügt
  __________________________________________________________________
 
 * Erstelle ein Modul für eine weitere Datenquelle (SQL).
+  HibernateProductRepository.class
+-------------------------------------------------------------------
+

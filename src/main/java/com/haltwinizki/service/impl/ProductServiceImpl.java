@@ -44,6 +44,14 @@ public class ProductServiceImpl implements ProductService {
     public void changeQuality() {
         for (Product product : getAllProducts()) {
             product.changeQuality();
+            validationProduct(product);
+        }
+    }
+
+    @Override
+    public void validationProduct(Product product) {
+        if (!product.isFresh()) {
+            delete(product.getId());
         }
     }
 }

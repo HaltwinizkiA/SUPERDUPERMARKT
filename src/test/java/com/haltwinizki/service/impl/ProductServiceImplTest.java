@@ -19,23 +19,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceImplTest {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-   @InjectMocks
+    @InjectMocks
     private static final ProductService productService = new ProductServiceImpl();
     private static Date date1;
-    private static Date date2;
+    private static Date pastDate;
     @Mock
     private LocalProductRepository productRepository;
 
     @BeforeEach
     public void setUp() {
+
         try {
             date1 = dateFormat.parse("20.07.2023");
-            date2 = dateFormat.parse("01.05.2023");
+            pastDate = dateFormat.parse("01.05.2023");
         } catch (ParseException e) {
             System.out.println(e);
         }
@@ -120,16 +122,40 @@ public class ProductServiceImplTest {
         Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 9);
         Product product2 = new Käse(2, "Emmental", 9.66, 40, date1, 0);
         Product product3 = new Wein(3, "Deutsche rot", 5.66, 10, null, 8);
-        Product product4 = new Whiskey(3, "Jack Daniels", 9.66, 20, null, 29);
+        Product product4 = new Whiskey(4, "Jack Daniels", 9.66, 20, null, 29);
 
         product1.changeQuality();
         product2.changeQuality();
         product3.changeQuality();
         product4.changeQuality();
 
-        assertEquals(11, product1.getQuality().get()); // Assuming qualityChange() method reduces quality by 1
+        assertEquals(11, product1.getQuality().get());
         assertEquals(39, product2.getQuality().get());
         assertEquals(10, product3.getQuality().get());
         assertEquals(21, product4.getQuality().get());
+    }
+
+    @Test
+    void validationProduct() {
+        Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 9);
+        Product notFresh1 = new Käse(2, "Emmental", 9.66, 40, pastDate, 0);
+        Product notFresh2 = new Käse(3, "Gauda", 3.66, 29, pastDate, 0);
+        Product notFresh3 = new Käse(4, "Deutsche rot", 2.66, 29, date1, 0);
+        Product product2 = new Käse(5, "Deutsche rot", 6.66, 31, date1, 0);
+
+        when(productRepository.delete(2)).thenReturn(notFresh1);
+        when(productRepository.delete(3)).thenReturn(notFresh2);
+        when(productRepository.delete(4)).thenReturn(notFresh3);
+
+        productService.validationProduct(product1);
+        verify(productRepository, times(0)).delete(product1.getId());
+        productService.validationProduct(notFresh1);
+        verify(productRepository, times(1)).delete(notFresh1.getId());
+        productService.validationProduct(notFresh2);
+        verify(productRepository, times(1)).delete(notFresh2.getId());
+        productService.validationProduct(notFresh3);
+        verify(productRepository, times(1)).delete(notFresh3.getId());
+        productService.validationProduct(product2);
+        verify(productRepository, times(0)).delete(product2.getId());
     }
 }

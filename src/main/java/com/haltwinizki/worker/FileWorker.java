@@ -39,7 +39,6 @@ public class FileWorker {
                 log.error("Invalid product type: " + s);
                 return null;
         }
-
     }
 
     public SimpleDateFormat getDateFormat() {
@@ -104,6 +103,9 @@ public class FileWorker {
         String[] heads = head.split(",");
         rows.add(heads);
         for (Product product : productList) {
+            if (product==null){
+                continue;
+            }
             Field[] fields = product.getClass().getSuperclass().getDeclaredFields();
             String[] row = createRow(fields, product);
             rows.add(row);
@@ -162,7 +164,5 @@ public class FileWorker {
             String lastLog = rows.get(rows.size() - 1)[0];
             return DATE_FORMAT.parse(lastLog);
         }
-
     }
-
 }

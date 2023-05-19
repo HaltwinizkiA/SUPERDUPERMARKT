@@ -19,9 +19,12 @@ public class Whiskey extends Product {
 
     @Override
     public void changeQuality() {
+
         if (getQuality().get() < maxQuality && this.getDayCounter().incrementAndGet() >= qualityChangeRate) {
             this.getQuality().getAndIncrement();
-            this.getDayCounter().set(0);
+            if (this.getDayCounter() != null) {
+                this.getDayCounter().set(0);
+            }
         }
     }
 

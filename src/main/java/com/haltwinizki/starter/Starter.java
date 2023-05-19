@@ -1,6 +1,8 @@
-package com.haltwinizki;
+package com.haltwinizki.starter;
 
-public class Main {
+import com.haltwinizki.Manager;
+
+public class Starter {
     public static void main(String[] args) {
         Manager manager = new Manager();
         manager.start();

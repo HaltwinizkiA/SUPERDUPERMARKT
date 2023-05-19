@@ -57,7 +57,6 @@ public class LocalProductRepositoryTest {
         products.add(product1);
         products.add(product2);
         when(localeProductsBaseMock.getProductsList()).thenReturn(products);
-
         assertEquals(products, productRepository.getAllProducts());
     }
 

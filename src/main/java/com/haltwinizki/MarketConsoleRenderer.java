@@ -6,10 +6,7 @@ import com.haltwinizki.service.ProductService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class MarketConsoleRenderer {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
@@ -156,7 +153,7 @@ public class MarketConsoleRenderer {
         }
     }
 
-    private Date inputExpirationDate() {
+    private Date inputDate() {
         System.out.println("Geben Sie bitte Verfallsdatum in format (dd.MM.yyyy) und drücken Sie ENTER");
         while (true) {
             try {
@@ -164,6 +161,40 @@ public class MarketConsoleRenderer {
             } catch (ParseException e) {
                 scanner.nextLine();// clear buffer
                 System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
+            }
+        }
+    }
+
+    private Date inputDateByAmountOfDays() {
+        System.out.println("Geben Sie bitte Anzahl der Tage");
+        while (true) {
+            try {
+                int days = scanner.nextInt();
+                if (days <= 0) {
+                    System.out.println("Die Anzahl der Tage muss größer als 0 sein");
+                    continue;
+                }
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_MONTH, days);
+                return calendar.getTime();
+            } catch (InputMismatchException e) {
+                scanner.nextLine();// clear buffer
+                System.out.println("Sie haben das Datenformat nicht befolgt " + "\n Bitte versuchen Sie es erneut");
+            }
+        }
+    }
+
+    private Date inputExpirationDate() {
+        System.out.println("Geben Sie die Eingabemethode für das Ablaufdatum ein\n" + "1. format(dd.MM.yyyy) \n" + "2. Anzahl der Tage");
+        while (true) {
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    return inputDate();
+                case 2:
+                    return inputDateByAmountOfDays();
+                default:
+                    System.out.println("Ungültige Option. Bitte wählen Sie erneut.");
             }
         }
     }

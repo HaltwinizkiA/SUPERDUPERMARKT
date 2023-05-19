@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+
 public class ProductQualityChangeScheduler {
     private static final Logger log = Logger.getLogger(FileWorker.class);
     private static final String FILENAME = "src/main/resources/logQualityChange.csv";
@@ -15,19 +16,20 @@ public class ProductQualityChangeScheduler {
     private Thread thread;
 
     public void schedulerStart(ProductService service) {
-            thread = new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    //todo check on null
-                    Date date = new Date();
-                    Date lastLogDate = null;
-                    if (service==null){
+                    if (service == null) {
+                        log.error("Der Nulldienst wurde an den Scheduler übergeben");
                         break;
                     }
+                    Date date = new Date();
+                    Date lastLogDate = null;
+
                     try {
                         lastLogDate = fileWorker.getLastLog(FILENAME);
-                    } catch (ParseException|IOException e) {
+                    } catch (ParseException | IOException e) {
                         log.error(e);
                     }
 

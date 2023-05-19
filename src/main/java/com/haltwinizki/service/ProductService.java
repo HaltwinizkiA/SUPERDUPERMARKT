@@ -18,4 +18,6 @@ public interface ProductService {
     List<Product> getDiscardedProducts();
 
     void changeQuality();
+
+    void validationProduct(Product product);
 }
