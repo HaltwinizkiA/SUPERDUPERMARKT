@@ -48,10 +48,10 @@ public abstract class Product implements Cloneable {
 
         Product product = (Product) o;
 
-        if (getDayCounter() != product.getDayCounter()) return false;
+        if (getDayCounter().get() != product.getDayCounter().get()) return false;
         if (getId() != product.getId()) return false;
         if (Double.compare(product.getPrice(), getPrice()) != 0) return false;
-        if (getQuality() != product.getQuality()) return false;
+        if (getQuality().get() != product.getQuality().get()) return false;
         if (getName() != null ? !getName().equals(product.getName()) : product.getName() != null) return false;
         return getExpirationDate() != null ? getExpirationDate().equals(product.getExpirationDate()) : product.getExpirationDate() == null;
     }

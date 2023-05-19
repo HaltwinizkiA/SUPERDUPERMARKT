@@ -9,12 +9,15 @@ Punkt
 eine threadsafe singltone benuzt. Für thread Sichercheit habe ich auch CopyOnWriteArrayList benutzt.
  - Fabric für Product erstellung.
 
+ - Architektur Etwas wie MVC aber es ist keine normale MVC. 
+
 Variablen die mehr Thread benutzt könnnen, habe ich als
 Atomic erstellt.
 
 Factory zur Produkterstellung in Console Render.
 
 LocaleProductsBase.class - eine DB Simulation
+
 
 Als Locale Datenspeicher habe ich CopyOnWriteArrayList für Threadsicherheit benutzt.
 

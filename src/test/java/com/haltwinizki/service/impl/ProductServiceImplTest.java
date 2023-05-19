@@ -27,25 +27,19 @@ public class ProductServiceImplTest {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     @InjectMocks
     private static final ProductService productService = new ProductServiceImpl();
-    private static Date date1;
+    private static Date date;
     private static Date pastDate;
     @Mock
     private LocalProductRepository productRepository;
 
     @BeforeEach
-    public void setUp() {
-
-        try {
-            date1 = dateFormat.parse("20.07.2023");
-            pastDate = dateFormat.parse("01.05.2023");
-        } catch (ParseException e) {
-            System.out.println(e);
-        }
+    public void setUp() throws ParseException {
+        date = dateFormat.parse("20.07.2023");
+        pastDate = dateFormat.parse("01.05.2023");
     }
 
     @Test
     public void testCreate() {
-
         Product product = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
         when(productRepository.create(product)).thenReturn(product);
         Product createdProduct = productService.create(product);
@@ -72,15 +66,14 @@ public class ProductServiceImplTest {
     @Test
     public void testDelete() {
         Product product = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
-        when(productRepository.create(product)).thenReturn(product);
-        productService.create(product);
         when(productRepository.delete(1)).thenReturn(product);
-        when(productRepository.delete(1)).thenReturn(product);
+
         Product removedProduct = productService.delete(1);
+        Product notExist = productService.delete(2);
+
         assertNotNull(removedProduct);
-        assertNull(productService.read(1));
+        assertNull(notExist);
         assertEquals(product, removedProduct);
-//        assertTrue(productService.getDiscardedProducts().add().contains(removedProduct));
     }
 
     @Test
@@ -96,13 +89,12 @@ public class ProductServiceImplTest {
         assertEquals(updatedProduct, result);
         assertEquals(updatedProduct, result);
         assertEquals(product.getId(), result.getId());
-
     }
 
     @Test
     public void testGetAllProducts() {
         Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 10);
-        Product product2 = new Käse(1, "Emmental", 9.66, 40, date1, 0);
+        Product product2 = new Käse(1, "Emmental", 9.66, 40, date, 0);
         when(productRepository.create(product1)).thenReturn(product1);
         when(productRepository.create(product2)).thenReturn(product2);
         List<Product> productList = new ArrayList<>();
@@ -120,7 +112,7 @@ public class ProductServiceImplTest {
     @Test
     public void testQualityChange() {
         Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 9);
-        Product product2 = new Käse(2, "Emmental", 9.66, 40, date1, 0);
+        Product product2 = new Käse(2, "Emmental", 9.66, 40, date, 0);
         Product product3 = new Wein(3, "Deutsche rot", 5.66, 10, null, 8);
         Product product4 = new Whiskey(4, "Jack Daniels", 9.66, 20, null, 29);
 
@@ -140,12 +132,8 @@ public class ProductServiceImplTest {
         Product product1 = new Wein(1, "Deutsche rot", 5.66, 10, null, 9);
         Product notFresh1 = new Käse(2, "Emmental", 9.66, 40, pastDate, 0);
         Product notFresh2 = new Käse(3, "Gauda", 3.66, 29, pastDate, 0);
-        Product notFresh3 = new Käse(4, "Deutsche rot", 2.66, 29, date1, 0);
-        Product product2 = new Käse(5, "Deutsche rot", 6.66, 31, date1, 0);
-
-        when(productRepository.delete(2)).thenReturn(notFresh1);
-        when(productRepository.delete(3)).thenReturn(notFresh2);
-        when(productRepository.delete(4)).thenReturn(notFresh3);
+        Product notFresh3 = new Käse(4, "Deutsche rot", 2.66, 29, date, 0);
+        Product product2 = new Käse(5, "Deutsche rot", 6.66, 31, date, 0);
 
         productService.validationProduct(product1);
         verify(productRepository, times(0)).delete(product1.getId());
