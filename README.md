@@ -5,13 +5,18 @@ Punkt
 
 * Begründe deine Wahl verwendeter Design Patterns
 
-Singlton für LocaleProductsBase. 
-Dies ist eine Datenbanksimulation. Sie muss einzigartige und Multi Thread sein, deshalb habe ich 
+-Singlton für LocaleProductsBase.Dies ist eine Datenbanksimulation. Sie muss einzigartige und Multi Thread sein, deshalb habe ich 
 eine threadsafe singltone benuzt. Für thread Sichercheit habe ich auch CopyOnWriteArrayList benutzt.
+ - Fabric für Product erstellung.
 
 Variablen die mehr Thread benutzt könnnen, habe ich als
 Atomic erstellt.
+
 Factory zur Produkterstellung in Console Render.
+
+LocaleProductsBase.class - eine DB Simulation
+
+Als Locale Datenspeicher habe ich CopyOnWriteArrayList für Threadsicherheit benutzt.
 
 DiscaredProducts.csv- Geschichte der ausrangierten Produkte.
 
@@ -37,4 +42,7 @@ Ich habe selbe Whiskey hinzufügt
 * Erstelle ein Modul für eine weitere Datenquelle (SQL).
   HibernateProductRepository.class
 -------------------------------------------------------------------
-
+* Die Funktion für verworfene Produkte, habe ich über einen Thread realisiert habe.
+Sie prüft einmal am Tag day counter, ändert die Qualität und entfernt gegebenenfalls das Produkt aus product.csv
+und legt es in discardedProducts.csv ab.Das Protokoll wird auch in der Datei logQualityChange.csv gespeichert,
+  damit man die Qualitätsänderungen überprüfen kann.
